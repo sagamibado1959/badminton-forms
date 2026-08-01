@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>相模原年齢別ミックス大会 申込フォーム</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f7;color:#1d1d1f;font-size:15px}
+.wrap{max-width:680px;margin:0 auto;padding:1.5rem 1rem 4rem}
+.page{display:none}.page.active{display:block}
+.site-header{background:#fff;border-bottom:0.5px solid #d2d2d7;padding:12px 1rem;position:sticky;top:0;z-index:50}
+.site-header-inner{max-width:680px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.site-header h1{font-size:14px;font-weight:600}
+.back-top-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#6e6e73;background:transparent;border:none;cursor:pointer;margin-bottom:1.25rem;padding:0}
+.page-title{margin:1.5rem 0 1rem}
+.page-title h2{font-size:20px;font-weight:600;margin-bottom:4px}
+.page-title p{font-size:13px;color:#6e6e73}
+.section-card{background:#fff;border:0.5px solid #d2d2d7;border-radius:12px;padding:1.25rem;margin-bottom:1rem}
+.section-title{font-size:15px;font-weight:600;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between}
+.field-group{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.field-group.full{grid-template-columns:1fr}
+.field-group.three{grid-template-columns:1fr 1fr 1fr}
+.field-group.four{grid-template-columns:1fr 1fr 1fr 1fr}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;color:#6e6e73;font-weight:500}
+.req{color:#d70015}
+input,select{width:100%;padding:8px 10px;border:0.5px solid #d2d2d7;border-radius:8px;font-size:14px;color:#1d1d1f;background:#fff;outline:none;font-family:inherit}
+input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,227,.15)}
+.age-badge{display:inline-flex;align-items:center;padding:8px 10px;background:#f5f5f7;border:0.5px solid #d2d2d7;border-radius:8px;font-size:14px;color:#6e6e73;min-height:36px}
+.age-badge.has-age{background:#e8f0fd;border-color:#bdd0f5;color:#0051a2;font-weight:600}
+.tab-row{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap}
+.tab{padding:7px 14px;border-radius:8px;border:0.5px solid #d2d2d7;background:transparent;font-size:13px;cursor:pointer;color:#6e6e73}
+.tab.active{background:#e8f0fd;color:#0051a2;border-color:transparent;font-weight:600}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.add-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:0.5px dashed #d2d2d7;border-radius:8px;background:transparent;font-size:13px;color:#6e6e73;cursor:pointer;margin-top:4px}
+.add-btn:hover{background:#f5f5f7}
+.remove-btn{background:transparent;border:none;cursor:pointer;color:#aeaeb2;padding:6px}
+.remove-btn:hover{color:#d70015}
+.btn-row{display:flex;gap:10px;margin-top:1rem}
+.go-confirm-btn{flex:1;padding:13px;background:#0071e3;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer}
+.add-entry-btn{flex:1;padding:13px;background:transparent;border:0.5px solid #d2d2d7;border-radius:10px;font-size:15px;cursor:pointer;color:#6e6e73;display:flex;align-items:center;justify-content:center;gap:6px}
+.add-entry-btn:hover{background:#f5f5f7}
+.back-btn{padding:13px 18px;background:transparent;border:0.5px solid #d2d2d7;border-radius:10px;font-size:14px;cursor:pointer;color:#6e6e73}
+.submit-btn{flex:1;padding:13px;background:#34c759;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.notice{font-size:13px;color:#6e6e73;background:#f5f5f7;border-radius:8px;padding:8px 12px;margin-bottom:12px;line-height:1.6}
+.entry-block{border:0.5px solid #d2d2d7;border-radius:12px;padding:1.25rem;margin-bottom:1rem;background:#fff}
+.entry-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.entry-label{font-size:14px;font-weight:600}
+.entry-remove-btn{background:transparent;border:0.5px solid #d2d2d7;border-radius:8px;padding:4px 10px;font-size:12px;color:#6e6e73;cursor:pointer}
+.entry-remove-btn:hover{color:#d70015;border-color:#d70015}
+.player-block{border:0.5px solid #d2d2d7;border-radius:8px;padding:12px;margin-bottom:10px;background:#fafafa}
+.player-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.player-label{font-size:13px;font-weight:600;color:#6e6e73}
+.member-block{border:0.5px solid #d2d2d7;border-radius:8px;padding:10px 12px;margin-bottom:8px;background:#fafafa}
+.member-label{font-size:12px;font-weight:600;color:#6e6e73;margin-bottom:8px}
+.divider{border:none;border-top:0.5px solid #d2d2d7;margin:12px 0}
+.count-badge{font-size:12px;color:#0051a2;background:#e8f0fd;padding:2px 8px;border-radius:6px}
+.confirm-table{width:100%;border-collapse:collapse;font-size:14px}
+.confirm-table tr{border-bottom:0.5px solid #d2d2d7}
+.confirm-table tr:last-child{border-bottom:none}
+.confirm-table th{width:40%;padding:9px 8px;text-align:left;color:#6e6e73;font-weight:400;vertical-align:top;font-size:13px}
+.confirm-table td{padding:9px 8px;color:#1d1d1f;font-weight:500;vertical-align:top}
+.confirm-entry-block{border:0.5px solid #d2d2d7;border-radius:12px;padding:1rem;margin-bottom:1rem;background:#fff}
+.confirm-entry-label{font-size:13px;font-weight:600;margin-bottom:8px;padding-bottom:8px;border-bottom:0.5px solid #d2d2d7}
+.player-confirm-block{border:0.5px solid #d2d2d7;border-radius:8px;padding:10px 12px;margin-bottom:8px;background:#fafafa}
+.player-confirm-label{font-size:12px;font-weight:600;color:#6e6e73;margin-bottom:6px}
+.id-badge{font-size:12px;font-family:monospace;background:#f5f5f7;padding:3px 8px;border-radius:6px;color:#6e6e73;border:0.5px solid #d2d2d7}
+.info-banner{background:#e8f0fd;border-radius:8px;padding:10px 14px;margin-bottom:1rem;font-size:13px;color:#0051a2}
+.search-result-card{background:#fff;border:0.5px solid #d2d2d7;border-radius:12px;padding:1rem 1.25rem;margin-bottom:10px;cursor:pointer}
+.search-result-card:hover{border-color:#0071e3}
+.search-result-name{font-size:15px;font-weight:600;margin-bottom:4px}
+.search-result-meta{font-size:13px;color:#6e6e73}
+.search-empty{text-align:center;padding:2rem;color:#aeaeb2;font-size:14px}
+.complete-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
+.complete-box{background:#fff;border-radius:16px;padding:2rem;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.complete-box h3{font-size:18px;font-weight:600;margin-bottom:8px}
+.complete-box p{font-size:14px;color:#6e6e73;margin-bottom:6px;line-height:1.6}
+.complete-box .close-btn{margin-top:1rem;padding:10px 28px;border:0.5px solid #d2d2d7;border-radius:8px;background:transparent;cursor:pointer;font-size:14px}
+.login-wrap{max-width:320px;margin:3rem auto;text-align:center}
+.login-wrap h2{font-size:18px;font-weight:600;margin-bottom:1.5rem}
+.login-wrap .field{margin-bottom:12px;text-align:left}
+.login-btn{width:100%;padding:11px;background:#0071e3;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px}
+.login-err{font-size:13px;color:#d70015;margin-top:8px;display:none}
+/* 管理者専用スタイル */
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:10px}
+.admin-header h2{font-size:20px;font-weight:600}
+.admin-tabs{display:flex;gap:6px;margin-bottom:1.25rem}
+.admin-tab{padding:7px 16px;border-radius:8px;border:0.5px solid #d2d2d7;background:transparent;font-size:13px;cursor:pointer;color:#6e6e73}
+.admin-tab.active{background:#1d1d1f;color:#fff;border-color:transparent;font-weight:600}
+.admin-tab-panel{display:none}.admin-tab-panel.active{display:block}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:0.5px solid #d2d2d7}
+.toggle-row:last-child{border-bottom:none}
+.toggle-wrap{display:flex;align-items:center;gap:10px}
+.toggle{position:relative;width:44px;height:24px;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;inset:0;border-radius:24px;background:#d2d2d7;transition:.2s}
+.toggle-slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;border-radius:50%;background:#fff;transition:.2s}
+.toggle input:checked+.toggle-slider{background:#34c759}
+.toggle input:checked+.toggle-slider:before{transform:translateX(20px)}
+.toggle-label{font-size:13px;font-weight:600;min-width:44px}
+.toggle-label.open{color:#1a7a3a}
+.toggle-label.closed{color:#d70015}
+/* 申込一覧 */
+.app-card{background:#fff;border:0.5px solid #d2d2d7;border-radius:12px;padding:1rem 1.25rem;margin-bottom:10px}
+.app-card-header{display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:6px}
+.app-card-name{font-size:15px;font-weight:600}
+.app-card-meta{font-size:13px;color:#6e6e73}
+.app-card-actions{display:flex;gap:6px;margin-top:10px}
+.app-edit-btn{padding:6px 14px;background:#e8f0fd;color:#0051a2;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500}
+.app-edit-btn:hover{background:#bdd0f5}
+.app-del-btn{padding:6px 14px;background:#fff0f0;color:#d70015;border:0.5px solid #ffb3b3;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500}
+.app-del-btn:hover{background:#ffe0e0}
+.app-detail{font-size:12px;color:#6e6e73;margin-top:4px;line-height:1.6;display:none}
+.app-detail.open{display:block}
+.app-toggle-detail{font-size:12px;color:#0071e3;cursor:pointer;background:none;border:none;margin-top:4px}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.key-hint{position:fixed;bottom:1rem;right:1rem;font-size:11px;color:#d2d2d7;user-select:none;pointer-events:none}
+@media(max-width:540px){.field-group.four{grid-template-columns:1fr 1fr}.field-group.three{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<header class="site-header"><div class="site-header-inner"><h1>🏸 相模原年齢別ミックス大会</h1><button class="add-btn" style="padding:5px 10px;font-size:12px" onclick="showPage('page-search')">🔍 申込変更</button></div></header>
+
+<div class="wrap">
+
+  <div class="page active" id="page-top">
+    <div class="page-title" style="margin-top:1rem"><h2>相模原年齢別ミックス大会</h2><p>下のボタンから申し込みを開始してください</p></div>
+    <div id="closed-banner" class="section-card" style="display:none;background:#fff3cd;border-color:#ffc107;text-align:center;padding:1.5rem"><p style="font-weight:600;color:#856404;font-size:16px">⚠️ 現在、申込受付を停止しています</p><p style="color:#856404;font-size:13px;margin-top:4px">受付期間外のためお申込みいただけません</p></div>
+    <div class="section-card" style="padding:1rem"><p style="font-size:13px;color:#6e6e73;margin-bottom:1rem">出場種目：<strong>混合ダブルス</strong></p><button id="start-form-btn" class="go-confirm-btn" onclick="startForm()" style="width:100%">申し込みを開始する →</button></div>
+  </div>
+
+  <div class="page" id="page-search">
+    <button class="back-top-btn" onclick="showPage('page-top')">← トップに戻る</button>
+    <div class="page-title"><h2>🔍 申込内容の変更</h2><p>申込代表者名で検索してください</p></div>
+    <div class="section-card"><div class="field-group full" style="margin-bottom:0"><div class="field"><label>申込代表者名（一部でも可）</label><div style="display:flex;gap:8px"><input id="search-input" type="text" placeholder="例：山田" onkeydown="if(event.key==='Enter')doSearch()"><button onclick="doSearch()" style="padding:0 16px;background:#0071e3;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;white-space:nowrap">検索</button></div></div></div></div>
+    <div id="search-results"></div>
+  </div>
+
+  <div class="page" id="page-form">
+    <button class="back-top-btn" onclick="showPage('page-top')">← トップに戻る</button>
+    <div id="edit-banner" class="info-banner" style="display:none">✏️ <span id="edit-banner-text"></span></div>
+    <div class="page-title"><h2>相模原年齢別ミックス大会</h2><p>すべての項目が必須です</p></div>
+    <div class="section-card"><div class="section-title">申込代表者</div>
+      <div class="field-group"><div class="field"><label>代表者氏名 <span class="req">*</span></label><input id="rep-name" type="text" placeholder="山田 太郎"></div><div class="field"><label>所属クラブ・チーム <span class="req">*</span></label><input id="rep-club" type="text" placeholder="〇〇バドミントンクラブ"></div></div>
+      <div class="field-group"><div class="field"><label>メールアドレス <span class="req">*</span></label><input id="rep-email" type="email" placeholder="example@email.com"></div><div class="field"><label>電話番号 <span class="req">*</span></label><input id="rep-tel" type="tel" placeholder="090-0000-0000"></div></div>
+      <div class="field-group full"><div class="field"><label>住所 <span class="req">*</span></label><input id="rep-addr" type="text" placeholder="神奈川県相模原市〇〇区…"></div></div>
+    </div>
+    <div id="panel-mixed" class="tab-panel active"><div id="entry-list-mixed"></div></div>
+        <div class="btn-row">
+      <button class="add-entry-btn" id="add-entry-btn" onclick="addEntry()" style="display:none">＋ <span id="add-entry-label">エントリーを追加</span></button>
+      <button class="go-confirm-btn" onclick="goConfirm()">入力内容を確認する →</button>
+    </div>
+  </div>
+
+  <div class="page" id="page-confirm">
+    <button class="back-top-btn" onclick="goBack()">← 入力画面に戻る</button>
+    <div class="page-title"><h2>📋 入力内容の確認</h2><p>内容を確認してください</p></div>
+    <div id="confirm-content"></div>
+    <div class="btn-row"><button class="back-btn" onclick="goBack()">← 戻る</button><button class="submit-btn" id="final-submit-btn" onclick="doSubmit()">この内容で申し込む ✓</button></div>
+  </div>
+
+  <!-- 管理者ログイン（キーシーケンスでのみアクセス可） -->
+  <div class="page" id="page-admin-login">
+    <button class="back-top-btn" onclick="showPage('page-top')">← 戻る</button>
+    <div class="login-wrap"><h2>🔐 管理者ログイン</h2>
+      <div class="field"><label>パスワード</label><input id="admin-pw" type="password" placeholder="パスワードを入力" onkeydown="if(event.key==='Enter')adminLogin()"></div>
+      <button class="login-btn" onclick="adminLogin()">ログイン</button>
+      <p class="login-err" id="login-err">パスワードが違います</p>
+    </div>
+  </div>
+
+  <!-- 管理者パネル -->
+  <div class="page" id="page-admin">
+    <div class="admin-header">
+      <div><h2>🛠 管理者パネル</h2><p style="font-size:13px;color:#6e6e73;margin-top:2px">相模原年齢別ミックス大会</p></div>
+      <button class="back-top-btn" style="margin-bottom:0" onclick="showPage('page-top')">← 申込フォームへ</button>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" id="tab-status-btn" onclick="switchAdminTab('tab-status')">受付管理</button>
+      <button class="admin-tab" id="tab-list-btn" onclick="switchAdminTab('tab-list')">申込一覧</button>
+    </div>
+
+    <!-- 受付管理タブ -->
+    <div class="admin-tab-panel active" id="tab-status-panel">
+      <div class="section-card">
+        <div class="section-title">申込受付の切り替え</div>
+        <div class="toggle-row">
+          <div><p style="font-size:14px;font-weight:600">相模原年齢別ミックス大会</p><p style="font-size:12px;color:#6e6e73;margin-top:2px">混合ダブルス</p></div>
+          <div class="toggle-wrap">
+            <span class="toggle-label open" id="status-label">受付中</span>
+            <label class="toggle"><input type="checkbox" id="status-toggle" checked onchange="toggleStatus()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 申込一覧タブ -->
+    <div class="admin-tab-panel" id="tab-list-panel">
+      <div id="admin-list-container"><p style="color:#6e6e73;font-size:13px">「申込一覧」タブを開くと読み込みます</p></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="complete-overlay" id="complete-overlay">
+  <div class="complete-box">
+    <div style="font-size:48px;margin-bottom:12px">✅</div>
+    <h3 id="complete-title">申し込みを受け付けました</h3>
+    <p id="complete-msg">申込内容をスプレッドシートに保存しました。</p>
+    <p id="complete-id" style="font-size:13px;color:#6e6e73;margin-top:4px"></p>
+    <button class="close-btn" onclick="document.getElementById('complete-overlay').style.display='none';goTop()">閉じる</button>
+  </div>
+</div>
+
+<div class="key-hint">↑↓↑↓</div>
+
+<script>
+
+function calcAge(dob){
+  if(!dob)return '';
+  var today=new Date();
+  var base=new Date(today.getFullYear(),3,1);
+  var birth=new Date(dob);
+  if(isNaN(birth.getTime()))return '';
+  var age=base.getFullYear()-birth.getFullYear();
+  var m=base.getMonth()-birth.getMonth();
+  if(m<0||(m===0&&base.getDate()<birth.getDate()))age--;
+  return age>=0?age:'';
+}
+function updateAgeBadgeByClass(block,dobClass,badgeClass){
+  var inp=block.querySelector('.'+dobClass);
+  var badge=block.querySelector('.'+badgeClass);
+  if(!inp||!badge)return;
+  function refresh(){var age=calcAge(inp.value);if(age!==''){badge.textContent=age+'歳';badge.className='age-badge has-age '+badgeClass;}else{badge.textContent='年齢';badge.className='age-badge '+badgeClass;}}
+  inp.addEventListener('change',refresh);
+  if(inp.value)refresh();
+}
+
+
+const CLASS_OPTIONS=['A級','B級','C級','壮年40','壮年50','壮年60'];
+const OPEN_CLASS=[{label:'男子',options:['男子A級','男子B級','男子C級','男子壮年40','男子壮年50','男子壮年60']},{label:'女子',options:['女子A級','女子B級','女子C級','女子壮年40','女子壮年50','女子壮年60']}];
+const EVENT_LABELS={elementary:'小学生シングルス',singles:'一般シングルス',doubles:'一般ダブルス','doubles-open':'一般ダブルス',mixed:'混合ダブルス',team:'団体戦'};
+let currentEvent=null,editingId=null;
+const status={open:true};
+
+function classSelectHTML(id,sel){sel=sel||'';return '<select id="'+id+'"><option value="">選択してください</option>'+CLASS_OPTIONS.map(function(c){return '<option'+(c===sel?' selected':'')+'>'+c+'</option>';}).join('')+'</select>';}
+function openClassSelectHTML(id,sel){sel=sel||'';var o='<option value="">選択してください</option>';OPEN_CLASS.forEach(function(g){o+='<optgroup label="'+g.label+'">'+g.options.map(function(x){return '<option'+(x===sel?' selected':'')+'>'+x+'</option>';}).join('')+'</optgroup>';});return '<select id="'+id+'">'+o+'</select>';}
+function gradeSelectHTML(id,sel){sel=sel||'';var opts=['1年生','2年生','3年生','4年生','5年生 A級','5年生 B級','6年生 A級','6年生 B級'];return '<select id="'+id+'"><option value="">学年</option>'+opts.map(function(o){return '<option'+(o===sel?' selected':'')+'>'+o+'</option>';}).join('')+'</select>';}
+function v(id){var el=document.getElementById(id);return el?el.value:'';}
+function sv(id,val){var el=document.getElementById(id);if(el)el.value=val||'';}
+function crow(lbl,val){return '<tr><th>'+lbl+'</th><td>'+(val||'<span style="color:#aeaeb2;font-weight:400">未入力</span>')+'</td></tr>';}
+function g(el,cls){var e=el.querySelector('.'+cls);return e?e.value:'';}
+function fi(d,k){return d&&d[k]!=null?d[k]:'';}
+function fsel(d,k){return d&&d[k]?d[k]:'';}
+function gsel(block,cls){var el=block.querySelector('select.'+cls);return el?el.value:'';}
+function generateId(){return 'A'+Date.now().toString(36).toUpperCase();}
+
+function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function goBack(){showPage('page-form');}
+function goTop(){editingId=null;['rep-name','rep-club','rep-email','rep-tel','rep-addr'].forEach(function(id){sv(id,'');});var eb=document.getElementById('edit-banner');if(eb)eb.style.display='none';var fsb=document.getElementById('final-submit-btn');if(fsb)fsb.textContent='この内容で申し込む ✓';showPage('page-top');}
+
+async function gasPost(payload){
+  var res=await fetch(GAS_URL,{method:'POST',body:JSON.stringify(payload)});
+  return await res.json();
+}
+
+// ── 申込者用：変更検索 ──
+async function doSearch(){
+  var q=(document.getElementById('search-input').value||'').trim();
+  var results=document.getElementById('search-results');
+  if(!q){results.innerHTML='<div class="search-empty">代表者名を入力して検索してください</div>';return;}
+  results.innerHTML='<p style="color:#6e6e73;font-size:13px;padding:8px 0">検索中...</p>';
+  try{
+    var data=await gasPost({action:'search',query:q,tournamentName:TOURNAMENT_NAME});
+    if(!data.ok||data.results.length===0){results.innerHTML='<div class="search-empty">「'+q+'」に一致する申込が見つかりませんでした</div>';return;}
+    results.innerHTML='';
+    data.results.forEach(function(app){
+      var card=document.createElement('div');card.className='search-result-card';
+      card.innerHTML='<div style="display:flex;justify-content:space-between;align-items:start;gap:8px"><div>'
+        +'<div class="search-result-name">'+app.repName+'</div>'
+        +'<div class="search-result-meta">種目：'+app.eventLabel+'　申込日：'+app.date+'</div>'
+        +'</div><span class="id-badge">'+app.id+'</span></div>';
+      card.onclick=function(){loadEditForm(app);};
+      results.appendChild(card);
+    });
+  }catch(e){results.innerHTML='<div class="search-empty" style="color:#d70015">通信エラー</div>';}
+}
+
+async function loadEditForm(app){
+  editingId=app.id;
+  sv('rep-name',app.repName);sv('rep-club',app.repClub);sv('rep-email',app.repEmail);sv('rep-tel',app.repTel);sv('rep-addr',app.repAddr);
+  var eb=document.getElementById('edit-banner');if(eb){eb.style.display='block';document.getElementById('edit-banner-text').textContent='変更モード：申込ID '+app.id+' を編集中';}
+  var fsb=document.getElementById('final-submit-btn');if(fsb)fsb.textContent='変更を保存する ✓';
+  initFormForEdit(app);showPage('page-form');
+}
+
+function updateAddEntryBtn(ev){
+  var btn=document.getElementById('add-entry-btn');if(!btn)return;
+  btn.style.display=['singles','doubles','doubles-open','mixed','team'].indexOf(ev)>=0?'flex':'none';
+  var labels={singles:'シングルスエントリーを追加',doubles:'ダブルスペアを追加','doubles-open':'ダブルスペアを追加',mixed:'ペアを追加',team:'チームを追加'};
+  var lbl=document.getElementById('add-entry-label');if(lbl)lbl.textContent=labels[ev]||'エントリーを追加';
+}
+
+function addPlayer(){addPlayerWithData({});}
+function addPlayerWithData(p){
+  var list=document.getElementById('player-list');if(!list||list.querySelectorAll('.player-block').length>=30)return;
+  var count=list.querySelectorAll('.player-block').length+1;
+  var pid='p'+Date.now();
+  var dv=p.dob||'';var age=calcAge(dv);
+  var bt=age!==''?age+'歳':'年齢';var bc=age!==''?'age-badge has-age p-age':'age-badge p-age';
+  var block=document.createElement('div');block.className='player-block';
+  block.innerHTML='<div class="player-header"><span class="player-label">選手 '+count+'</span><button class="remove-btn" onclick="removePlayer(this)">✕</button></div>'
+    +'<div class="field-group four"><div class="field"><label>氏名（姓）<span class="req">*</span></label><input class="p-sei" type="text" placeholder="山田" value="'+(p.sei||'')+'"></div><div class="field"><label>氏名（名）<span class="req">*</span></label><input class="p-mei" type="text" placeholder="太郎" value="'+(p.mei||'')+'"></div><div class="field"><label>ふりがな（せい）<span class="req">*</span></label><input class="p-fsei" type="text" placeholder="やまだ" value="'+(p.fsei||'')+'"></div><div class="field"><label>ふりがな（めい）<span class="req">*</span></label><input class="p-fmei" type="text" placeholder="たろう" value="'+(p.fmei||'')+'"></div></div>'
+    +'<div class="field-group"><div class="field"><label>生年月日 <span class="req">*</span></label><input class="p-dob" type="date" value="'+dv+'"></div><div class="field"><label>年齢（4/1時点）</label><span class="'+bc+'">'+bt+'</span></div></div>'
+    +'<div class="field-group three"><div class="field"><label>学年 <span class="req">*</span></label>'+gradeSelectHTML('grade_'+pid,p.grade||'')+'</div><div class="field"><label>性別 <span class="req">*</span></label><select class="p-gender"><option value="">性別</option>'+['男性','女性','回答しない'].map(function(x){return '<option'+(p.gender===x?' selected':'')+'>'+x+'</option>';}).join('')+'</select></div><div class="field"><label>所属クラブ・チーム <span class="req">*</span></label><input class="p-club" type="text" placeholder="〇〇クラブ" value="'+(p.club||'')+'"></div></div>';
+  list.appendChild(block);
+  updateAgeBadgeByClass(block,'p-dob','p-age');
+  updatePlayerUI();
+}
+function removePlayer(btn){btn.closest('.player-block').remove();document.querySelectorAll('.player-block').forEach(function(b,i){b.querySelector('.player-label').textContent='選手 '+(i+1);});updatePlayerUI();}
+function updatePlayerUI(){
+  var c=document.querySelectorAll('.player-block').length;
+  var badge=document.getElementById('player-count');if(badge)badge.textContent=c+'名';
+  var btn=document.getElementById('add-player-btn');if(!btn)return;
+  btn.disabled=c>=30;btn.style.opacity=c>=30?'.4':'1';
+  btn.textContent=c>=30?'上限（30名）に達しました':'＋ 選手を追加';
+}
+
+function buildEntryHTML(ev,data){
+  var uid=ev+'_'+Date.now();
+  var rb='<button class="entry-remove-btn" onclick="removeEntry(this)" style="display:none">✕ 削除</button>';
+  var hdr='<div class="entry-header"><span class="entry-label"></span>'+rb+'</div>';
+  function dobAge(dc,ac,dv){dv=dv||'';var age=calcAge(dv);var bt=age!==''?age+'歳':'年齢';var bc=age!==''?'age-badge has-age '+ac:'age-badge '+ac;return '<div class="field-group"><div class="field"><label>生年月日 <span class="req">*</span></label><input class="'+dc+'" type="date" value="'+dv+'"></div><div class="field"><label>年齢（4/1時点）</label><span class="'+bc+'">'+bt+'</span></div></div>';}
+  if(ev==='singles')return hdr
+    +'<div class="field-group"><div class="field"><label>氏名（姓）<span class="req">*</span></label><input class="e-sei" type="text" placeholder="山田" value="'+fi(data,'sei')+'"></div><div class="field"><label>氏名（名）<span class="req">*</span></label><input class="e-mei" type="text" placeholder="太郎" value="'+fi(data,'mei')+'"></div></div>'
+    +'<div class="field-group"><div class="field"><label>ふりがな（せい）<span class="req">*</span></label><input class="e-fsei" type="text" placeholder="やまだ" value="'+fi(data,'fsei')+'"></div><div class="field"><label>ふりがな（めい）<span class="req">*</span></label><input class="e-fmei" type="text" placeholder="たろう" value="'+fi(data,'fmei')+'"></div></div>'
+    +dobAge('e-dob','e-age',fi(data,'dob'))
+    +'<div class="field-group"><div class="field"><label>性別 <span class="req">*</span></label><select class="e-gender"><option value="">選択してください</option>'+['男性','女性','その他','回答しない'].map(function(x){return '<option'+(fi(data,'gender')===x?' selected':'')+'>'+x+'</option>';}).join('')+'</select></div><div class="field"><label>クラス <span class="req">*</span></label>'+classSelectHTML('sc_'+uid,fsel(data,'class'))+'</div></div>'
+    +'<div class="field-group"><div class="field"><label>電話番号 <span class="req">*</span></label><input class="e-tel" type="tel" placeholder="090-0000-0000" value="'+fi(data,'tel')+'"></div><div class="field"><label>住所 <span class="req">*</span></label><input class="e-addr" type="text" placeholder="神奈川県相模原市〇〇区…" value="'+fi(data,'addr')+'"></div></div>'
+    +'<div class="field-group full"><div class="field"><label>所属クラブ・チーム <span class="req">*</span></label><input class="e-club" type="text" placeholder="〇〇バドミントンクラブ" value="'+fi(data,'club')+'"></div></div>';
+  var isOpen=(ev==='doubles-open');var clsHtml=isOpen?openClassSelectHTML('dc_'+uid,fsel(data,'class')):classSelectHTML('dc_'+uid,fsel(data,'class'));
+  if(ev==='doubles'||ev==='doubles-open')return hdr
+    +'<p style="font-size:13px;font-weight:600;color:#6e6e73;margin-bottom:8px">選手 1</p>'
+    +'<div class="field-group"><div class="field"><label>氏名（姓）<span class="req">*</span></label><input class="e-d1-sei" type="text" placeholder="山田" value="'+fi(data,'d1sei')+'"></div><div class="field"><label>氏名（名）<span class="req">*</span></label><input class="e-d1-mei" type="text" placeholder="太郎" value="'+fi(data,'d1mei')+'"></div></div>'
+    +'<div class="field-group"><div class="field"><label>ふりがな（せい）<span class="req">*</span></label><input class="e-d1-fsei" type="text" placeholder="やまだ" value="'+fi(data,'d1fsei')+'"></div><div class="field"><label>ふりがな（めい）<span class="req">*</span></label><input class="e-d1-fmei" type="text" placeholder="たろう" value="'+fi(data,'d1fmei')+'"></div></div>'
+    +dobAge('e-d1-dob','e-d1-age',fi(data,'d1dob'))
+    +'<div class="field-group"><div class="field"><label>電話番号 <span class="req">*</span></label><input class="e-d1-tel" type="tel" placeholder="090-0000-0000" value="'+fi(data,'d1tel')+'"></div><div class="field"><label>住所（市区町村まで）<span class="req">*</span></label><input class="e-d1-addr" type="text" placeholder="神奈川県相模原市〇〇区" value="'+fi(data,'d1addr')+'"></div></div>'
+    +'<div class="field-group full"><div class="field"><label>所属クラブ・チーム <span class="req">*</span></label><input class="e-d1-club" type="text" placeholder="〇〇バドミントンクラブ" value="'+fi(data,'d1club')+'"></div></div>'
+    +'<div class="divider"></div><p style="font-size:13px;font-weight:600;color:#6e6e73;margin-bottom:8px">選手 2</p>'
+    +'<div class="field-group"><div class="field"><label>氏名（姓）<span class="req">*</span></label><input class="e-d2-sei" type="text" placeholder="鈴木" value="'+fi(data,'d2sei')+'"></div><div class="field"><label>氏名（名）<span class="req">*</span></label><input class="e-d2-mei" type="text" placeholder="次郎" value="'+fi(data,'d2mei')+'"></div></div>'
+    +'<div class="field-group"><div class="field"><label>ふりがな（せい）<span class="req">*</span></label><input class="e-d2-fsei" type="text" placeholder="すずき" value="'+fi(data,'d2fsei')+'"></div><div class="field"><label>ふりがな（めい）<span class="req">*</span></label><input class="e-d2-fmei" type="text" placeholder="じろう" value="'+fi(data,'d2fmei')+'"></div></div>'
+    +dobAge('e-d2-dob','e-d2-age',fi(data,'d2dob'))
+    +'<div class="field-group"><div class="field"><label>電話番号 <span class="req">*</span></label><input class="e-d2-tel" type="tel" placeholder="090-0000-0000" value="'+fi(data,'d2tel')+'"></div><div class="field"><label>住所（市区町村まで）<span class="req">*</span></label><input class="e-d2-addr" type="text" placeholder="神奈川県相模原市〇〇区" value="'+fi(data,'d2addr')+'"></div></div>'
+    +'<div class="field-group full"><div class="field"><label>所属クラブ・チーム <span class="req">*</span></label><input class="e-d2-club" type="text" placeholder="〇〇バドミントンクラブ" value="'+fi(data,'d2club')+'"></div></div>'
+    +'<div class="divider"></div><div class="field-group full"><div class="field"><label>クラス <span class="req">*</span></label>'+clsHtml+'</div></div>';
+  if(ev==='mixed')return hdr
+    +'<p style="font-size:13px;font-weight:600;color:#6e6e73;margin-bottom:8px">選手 1（男性）</p>'
+    +'<div class="field-group"><div class="field"><label>氏名（姓）<span class="req">*</span></label><input class="e-m1-sei" type="text" placeholder="山田" value="'+fi(data,'m1sei')+'"></div><div class="field"><label>氏名（名）<span class="req">*</span></label><input class="e-m1-mei" type="text" placeholder="太郎" value="'+fi(data,'m1mei')+'"></div></div>'
+    +'<div class="field-group"><div class="field"><label>ふりがな（せい）<span class="req">*</span></label><input class="e-m1-fsei" type="text" placeholder="やまだ" value="'+fi(data,'m1fsei')+'"></div><div class="field"><label>ふりがな（めい）<span class="req">*</span></label><input class="e-m1-fmei" type="text" placeholder="たろう" value="'+fi(data,'m1fmei')+'"></div></div>'
+    +dobAge('e-m1-dob','e-m1-age',fi(data,'m1dob'))
+    +'<div class="field-group"><div class="field"><label>メールアドレス <span class="req">*</span></label><input class="e-m1-email" type="email" placeholder="example@email.com" value="'+fi(data,'m1email')+'"></div><div class="field"><label>電話番号 <span class="req">*</span></label><input class="e-m1-tel" type="tel" placeholder="090-0000-0000" value="'+fi(data,'m1tel')+'"></div></div>'
+    +'<div class="field-group full"><div class="field"><label>住所 <span class="req">*</span></label><input class="e-m1-addr" type="text" placeholder="神奈川県相模原市〇〇区…" value="'+fi(data,'m1addr')+'"></div></div>'
+    +'<div class="field-group full"><div class="field"><label>所属クラブ・チーム <span class="req">*</span></label><input class="e-m1-club" type="text" placeholder="〇〇バドミントンクラブ" value="'+fi(data,'m1club')+'"></div></div>'
+    +'<div class="divider"></div><p style="font-size:13px;font-weight:600;color:#6e6e73;margin-bottom:8px">選手 2（女性）</p>'
+    +'<div class="field-group"><div class="field"><label>氏名（姓）<span class="req">*</span></label><input class="e-m2-sei" type="text" placeholder="鈴木" value="'+fi(data,'m2sei')+'"></div><div class="field"><label>氏名（名）<span class="req">*</span></label><input class="e-m2-mei" type="text" placeholder="花子" value="'+fi(data,'m2mei')+'"></div></div>'
+    +'<div class="field-group"><div class="field"><label>ふりがな（せい）<span class="req">*</span></label><input class="e-m2-fsei" type="text" placeholder="すずき" value="'+fi(data,'m2fsei')+'"></div><div class="field"><label>ふりがな（めい）<span class="req">*</span></label><input class="e-m2-fmei" type="text" placeholder="はなこ" value="'+fi(data,'m2fmei')+'"></div></div>'
+    +dobAge('e-m2-dob','e-m2-age',fi(data,'m2dob'))
+    +'<div class="field-group"><div class="field"><label>メールアドレス <span class="req">*</span></label><input class="e-m2-email" type="email" placeholder="example2@email.com" value="'+fi(data,'m2email')+'"></div><div class="field"><label>電話番号 <span class="req">*</span></label><input class="e-m2-tel" type="tel" placeholder="090-0000-0000" value="'+fi(data,'m2tel')+'"></div></div>'
+    +'<div class="field-group full"><div class="field"><label>住所 <span class="req">*</span></label><input class="e-m2-addr" type="text" placeholder="神奈川県相模原市〇〇区…" value="'+fi(data,'m2addr')+'"></div></div>'
+    +'<div class="field-group full"><div class="field"><label>所属クラブ・チーム <span class="req">*</span></label><input class="e-m2-club" type="text" placeholder="〇〇バドミントンクラブ" value="'+fi(data,'m2club')+'"></div></div>'
+    +'<div class="divider"></div><div class="field-group full"><div class="field"><label>クラス <span class="req">*</span></label>'+classSelectHTML('mc_'+uid,fsel(data,'class'))+'</div></div>';
+  if(ev==='team'){
+    var defNm=[['山田','太郎','やまだ','たろう'],['田中','一郎','たなか','いちろう'],['佐々木','健','ささき','けん']];
+    var defNf=[['鈴木','花子','すずき','はなこ'],['伊藤','由美','いとう','ゆみ'],['高橋','さくら','たかはし','さくら']];
+    function teamRows(sx,defN){var h='';var mems=data&&data[sx+'members']?data[sx+'members']:[];
+      for(var i=0;i<3;i++){var m=mems[i]||{};var dv=m.dob||'';var age=calcAge(dv);var bt=age!==''?age+'歳':'年齢';var bc=age!==''?'age-badge has-age e-'+sx+'-age':'age-badge e-'+sx+'-age';
+        h+='<div class="member-block"><div class="member-label">'+(sx==='m'?'男子':'女子')+' '+(i+1)+'</div>'
+          +'<div class="field-group four"><div class="field"><label>氏名（姓）<span class="req">*</span></label><input class="e-'+sx+'-sei" type="text" placeholder="'+defN[i][0]+'" value="'+(m.sei||'')+'"></div><div class="field"><label>氏名（名）<span class="req">*</span></label><input class="e-'+sx+'-mei" type="text" placeholder="'+defN[i][1]+'" value="'+(m.mei||'')+'"></div><div class="field"><label>ふりがな（せい）<span class="req">*</span></label><input class="e-'+sx+'-fsei" type="text" placeholder="'+defN[i][2]+'" value="'+(m.fsei||'')+'"></div><div class="field"><label>ふりがな（めい）<span class="req">*</span></label><input class="e-'+sx+'-fmei" type="text" placeholder="'+defN[i][3]+'" value="'+(m.fmei||'')+'"></div></div>'
+          +'<div class="field-group"><div class="field"><label>生年月日 <span class="req">*</span></label><input class="e-'+sx+'-dob" type="date" value="'+dv+'"></div><div class="field"><label>年齢（4/1時点）</label><span class="'+bc+'">'+bt+'</span></div></div>'
+          +'<div class="field-group"><div class="field"><label>電話番号 <span class="req">*</span></label><input class="e-'+sx+'-tel" type="tel" placeholder="090-0000-0000" value="'+(m.tel||'')+'"></div><div class="field"><label>住所（市区町村まで）<span class="req">*</span></label><input class="e-'+sx+'-addr" type="text" placeholder="神奈川県相模原市〇〇区" value="'+(m.addr||'')+'"></div></div>'
+          +'</div>';}return h;}
+    return hdr
+      +'<div class="field-group"><div class="field"><label>チーム名 <span class="req">*</span></label><input class="e-t-name" type="text" placeholder="〇〇バドミントンクラブ Aチーム" value="'+fi(data,'tname')+'"></div><div class="field"><label>クラス <span class="req">*</span></label>'+classSelectHTML('tc_'+uid,fsel(data,'tclass'))+'</div></div>'
+      +'<p style="font-size:13px;font-weight:600;color:#6e6e73;margin:12px 0 8px">男子選手（3名）</p>'+teamRows('m',defNm)
+      +'<p style="font-size:13px;font-weight:600;color:#6e6e73;margin:12px 0 8px">女子選手（3名）</p>'+teamRows('f',defNf);}
+  return '';
+}
+
+function bindAgeEvents(block,ev){
+  if(ev==='singles'){updateAgeBadgeByClass(block,'e-dob','e-age');}
+  else if(ev==='doubles'||ev==='doubles-open'){updateAgeBadgeByClass(block,'e-d1-dob','e-d1-age');updateAgeBadgeByClass(block,'e-d2-dob','e-d2-age');}
+  else if(ev==='mixed'){updateAgeBadgeByClass(block,'e-m1-dob','e-m1-age');updateAgeBadgeByClass(block,'e-m2-dob','e-m2-age');}
+  else if(ev==='team'){
+    ['m','f'].forEach(function(sx){
+      block.querySelectorAll('.e-'+sx+'-dob').forEach(function(inp){
+        var mb=inp.closest('.member-block');if(!mb)return;
+        var ageEl=mb.querySelector('.e-'+sx+'-age');if(!ageEl)return;
+        function refresh(){var age=calcAge(inp.value);if(age!==''){ageEl.textContent=age+'歳';ageEl.className='age-badge has-age e-'+sx+'-age';}else{ageEl.textContent='年齢';ageEl.className='age-badge e-'+sx+'-age';}}
+        inp.addEventListener('change',refresh);if(inp.value)refresh();
+      });
+    });
+  }
+}
+
+function collectEntry(block,ev){
+  function ageText(cls){var el=block.querySelector('.'+cls);return el?el.textContent:'';}
+  if(ev==='singles')return{sei:g(block,'e-sei'),mei:g(block,'e-mei'),fsei:g(block,'e-fsei'),fmei:g(block,'e-fmei'),dob:g(block,'e-dob'),age:ageText('e-age'),gender:gsel(block,'e-gender'),class:block.querySelector('select[id^="sc_"]')?block.querySelector('select[id^="sc_"]').value:'',tel:g(block,'e-tel'),addr:g(block,'e-addr'),club:g(block,'e-club')};
+  if(ev==='doubles'||ev==='doubles-open')return{d1sei:g(block,'e-d1-sei'),d1mei:g(block,'e-d1-mei'),d1fsei:g(block,'e-d1-fsei'),d1fmei:g(block,'e-d1-fmei'),d1dob:g(block,'e-d1-dob'),d1age:ageText('e-d1-age'),d1tel:g(block,'e-d1-tel'),d1addr:g(block,'e-d1-addr'),d1club:g(block,'e-d1-club'),d2sei:g(block,'e-d2-sei'),d2mei:g(block,'e-d2-mei'),d2fsei:g(block,'e-d2-fsei'),d2fmei:g(block,'e-d2-fmei'),d2dob:g(block,'e-d2-dob'),d2age:ageText('e-d2-age'),d2tel:g(block,'e-d2-tel'),d2addr:g(block,'e-d2-addr'),d2club:g(block,'e-d2-club'),class:block.querySelector('select[id^="dc_"]')?block.querySelector('select[id^="dc_"]').value:''};
+  if(ev==='mixed')return{m1sei:g(block,'e-m1-sei'),m1mei:g(block,'e-m1-mei'),m1fsei:g(block,'e-m1-fsei'),m1fmei:g(block,'e-m1-fmei'),m1dob:g(block,'e-m1-dob'),m1age:ageText('e-m1-age'),m1email:g(block,'e-m1-email'),m1tel:g(block,'e-m1-tel'),m1addr:g(block,'e-m1-addr'),m1club:g(block,'e-m1-club'),m2sei:g(block,'e-m2-sei'),m2mei:g(block,'e-m2-mei'),m2fsei:g(block,'e-m2-fsei'),m2fmei:g(block,'e-m2-fmei'),m2dob:g(block,'e-m2-dob'),m2age:ageText('e-m2-age'),m2email:g(block,'e-m2-email'),m2tel:g(block,'e-m2-tel'),m2addr:g(block,'e-m2-addr'),m2club:g(block,'e-m2-club'),class:block.querySelector('select[id^="mc_"]')?block.querySelector('select[id^="mc_"]').value:''};
+  if(ev==='team'){var cm=function(sx){return Array.from(block.querySelectorAll('.member-block')).filter(function(mb){return mb.querySelector('.e-'+sx+'-sei');}).map(function(mb){var gs=function(c){var e=mb.querySelector('.e-'+sx+'-'+c);return e?e.value:'';};var ae=mb.querySelector('.e-'+sx+'-age');return{sei:gs('sei'),mei:gs('mei'),fsei:gs('fsei'),fmei:gs('fmei'),dob:gs('dob'),age:ae?ae.textContent:'',tel:gs('tel'),addr:gs('addr')};});};return{tname:g(block,'e-t-name'),tclass:block.querySelector('select[id^="tc_"]')?block.querySelector('select[id^="tc_"]').value:'',mmembers:cm('m'),fmembers:cm('f')};}
+  return{};
+}
+
+function buildEntryConfirmHTML(block,ev,idx){
+  var lmap={singles:'シングルス',doubles:'ダブルス','doubles-open':'ダブルス',mixed:'ペア',team:'チーム'};
+  var d=collectEntry(block,ev);var inner='';
+  if(ev==='singles')inner='<table class="confirm-table">'+crow('氏名',(d.sei+' '+d.mei).trim())+crow('ふりがな',(d.fsei+' '+d.fmei).trim())+crow('生年月日',d.dob)+crow('年齢',d.age)+crow('性別',d.gender)+crow('クラス',d.class)+crow('電話番号',d.tel)+crow('住所',d.addr)+crow('所属クラブ・チーム',d.club)+'</table>';
+  else if(ev==='doubles'||ev==='doubles-open')inner='<p style="font-size:12px;font-weight:600;color:#6e6e73;margin-bottom:6px">選手 1</p><table class="confirm-table">'+crow('氏名',(d.d1sei+' '+d.d1mei).trim())+crow('ふりがな',(d.d1fsei+' '+d.d1fmei).trim())+crow('生年月日',d.d1dob)+crow('年齢',d.d1age)+crow('電話番号',d.d1tel)+crow('住所',d.d1addr)+crow('所属クラブ・チーム',d.d1club)+'</table><div class="divider"></div><p style="font-size:12px;font-weight:600;color:#6e6e73;margin-bottom:6px">選手 2</p><table class="confirm-table">'+crow('氏名',(d.d2sei+' '+d.d2mei).trim())+crow('ふりがな',(d.d2fsei+' '+d.d2fmei).trim())+crow('生年月日',d.d2dob)+crow('年齢',d.d2age)+crow('電話番号',d.d2tel)+crow('住所',d.d2addr)+crow('所属クラブ・チーム',d.d2club)+'</table><div class="divider"></div><table class="confirm-table">'+crow('クラス',d.class)+'</table>';
+  else if(ev==='mixed')inner='<p style="font-size:12px;font-weight:600;color:#6e6e73;margin-bottom:6px">選手 1（男性）</p><table class="confirm-table">'+crow('氏名',(d.m1sei+' '+d.m1mei).trim())+crow('ふりがな',(d.m1fsei+' '+d.m1fmei).trim())+crow('生年月日',d.m1dob)+crow('年齢',d.m1age)+crow('メールアドレス',d.m1email)+crow('電話番号',d.m1tel)+crow('住所',d.m1addr)+crow('所属クラブ・チーム',d.m1club)+'</table><div class="divider"></div><p style="font-size:12px;font-weight:600;color:#6e6e73;margin-bottom:6px">選手 2（女性）</p><table class="confirm-table">'+crow('氏名',(d.m2sei+' '+d.m2mei).trim())+crow('ふりがな',(d.m2fsei+' '+d.m2fmei).trim())+crow('生年月日',d.m2dob)+crow('年齢',d.m2age)+crow('メールアドレス',d.m2email)+crow('電話番号',d.m2tel)+crow('住所',d.m2addr)+crow('所属クラブ・チーム',d.m2club)+'</table><div class="divider"></div><table class="confirm-table">'+crow('クラス',d.class)+'</table>';
+  else if(ev==='team'){var mH='',fH='';(d.mmembers||[]).forEach(function(m,i){mH+='<div class="player-confirm-block"><div class="player-confirm-label">男子 '+(i+1)+'</div><table class="confirm-table">'+crow('氏名',(m.sei+' '+m.mei).trim())+crow('ふりがな',(m.fsei+' '+m.fmei).trim())+crow('生年月日',m.dob)+crow('年齢',m.age)+crow('電話番号',m.tel)+crow('住所',m.addr)+'</table></div>';});(d.fmembers||[]).forEach(function(m,i){fH+='<div class="player-confirm-block"><div class="player-confirm-label">女子 '+(i+1)+'</div><table class="confirm-table">'+crow('氏名',(m.sei+' '+m.mei).trim())+crow('ふりがな',(m.fsei+' '+m.fmei).trim())+crow('生年月日',m.dob)+crow('年齢',m.age)+crow('電話番号',m.tel)+crow('住所',m.addr)+'</table></div>';});inner='<table class="confirm-table" style="margin-bottom:12px">'+crow('チーム名',d.tname)+crow('クラス',d.tclass)+'</table>'+mH+fH;}
+  return '<div class="confirm-entry-block"><div class="confirm-entry-label">'+(lmap[ev]||'エントリー')+' '+idx+'</div>'+inner+'</div>';
+}
+
+// ── 管理者機能 ──
+const ADMIN_SEQ=['ArrowUp','ArrowDown','ArrowUp','ArrowDown'];
+let keyBuf=[];
+document.addEventListener('keydown',function(e){
+  keyBuf.push(e.key);
+  if(keyBuf.length>ADMIN_SEQ.length)keyBuf.shift();
+  if(keyBuf.join(',')===ADMIN_SEQ.join(',')){
+    keyBuf=[];
+    showPage('page-admin-login');
+  }
+});
+
+function adminLogin(){
+  var pw=document.getElementById('admin-pw').value;
+  if(pw===ADMIN_PASSWORD){
+    document.getElementById('login-err').style.display='none';
+    document.getElementById('admin-pw').value='';
+    showAdminPanel();
+  }else{
+    document.getElementById('login-err').style.display='block';
+  }
+}
+
+function showAdminPanel(){
+  showPage('page-admin');
+  switchAdminTab('tab-status');
+}
+
+function switchAdminTab(tab){
+  document.querySelectorAll('.admin-tab').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.admin-tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.getElementById(tab+'-btn').classList.add('active');
+  document.getElementById(tab+'-panel').classList.add('active');
+  if(tab==='tab-list')loadAdminList();
+}
+
+async function loadAdminList(){
+  var container=document.getElementById('admin-list-container');
+  container.innerHTML='<p style="color:#6e6e73;font-size:13px;padding:8px 0">読み込み中...</p>';
+  try{
+    var data=await gasPost({action:'search',query:'',tournamentName:TOURNAMENT_NAME});
+    if(!data.ok||data.results.length===0){container.innerHTML='<div class="search-empty">申込データがありません</div>';return;}
+    container.innerHTML='<p style="font-size:13px;color:#6e6e73;margin-bottom:1rem">申込件数：<strong style="color:#1d1d1f">'+data.results.length+'件</strong></p>';
+    data.results.sort(function(a,b){return b.date>a.date?1:-1;}).forEach(function(app){
+      var card=document.createElement('div');card.className='app-card';
+      var entries='';
+      try{
+        var ents=typeof app.entries==='string'?JSON.parse(app.entries):app.entries;
+        if(Array.isArray(ents)&&ents.length>0){
+          var e0=ents[0];
+          if(e0.sei)entries='代表選手：'+e0.sei+' '+e0.mei;
+          else if(e0.d1sei)entries='選手1：'+e0.d1sei+' '+e0.d1mei;
+          else if(e0.tname)entries='チーム：'+e0.tname;
+        }
+      }catch(e){}
+      card.innerHTML='<div class="app-card-header">'
+        +'<div><div class="app-card-name">'+app.repName+'</div>'
+        +'<div class="app-card-meta">'+app.eventLabel+'　'+app.date+'</div>'
+        +(entries?'<div class="app-card-meta">'+entries+'</div>':'')+'</div>'
+        +'<span class="id-badge">'+app.id+'</span></div>'
+        +'<div class="app-card-actions">'
+        +'<button class="app-edit-btn" onclick="adminEditApp('+JSON.stringify(JSON.stringify(app))+')">✏️ 編集</button>'
+        +'<button class="app-del-btn" onclick="adminDeleteApp(\''+app.id+'\',this)">🗑 削除</button>'
+        +'</div>';
+      container.appendChild(card);
+    });
+  }catch(e){container.innerHTML='<div class="search-empty" style="color:#d70015">通信エラー</div>';}
+}
+
+function adminEditApp(appJson){
+  var app=JSON.parse(appJson);
+  showPage('page-form');
+  loadEditForm(app);
+}
+
+async function adminDeleteApp(id,btn){
+  if(!confirm('申込ID「'+id+'」を削除しますか？\nこの操作は取り消せません。'))return;
+  btn.disabled=true;btn.textContent='削除中...';
+  try{
+    var res=await gasPost({action:'delete',id:id,tournamentName:TOURNAMENT_NAME});
+    if(res.ok){btn.closest('.app-card').style.opacity='.4';btn.textContent='削除済み';}
+    else{alert('削除に失敗しました');btn.disabled=false;btn.textContent='🗑 削除';}
+  }catch(e){alert('通信エラー');btn.disabled=false;btn.textContent='🗑 削除';}
+}
+
+const GAS_URL='https://script.google.com/macros/s/AKfycbwAJwlm94Ug6v2UREWFnJUGbFDT7pC7JQbUOuJ8_5T_-2uhOjrTMnBRabXP1Vz6jDnJ1w/exec';
+const ADMIN_PASSWORD='sagamibado1959';
+const TOURNAMENT_KEY='mixed';
+const TOURNAMENT_NAME='相模原年齢別ミックス大会';
+const EVENTS=["mixed"];
+currentEvent='mixed';
+
+
+
+function addEntry(){var ev=currentEvent;var listEl=document.getElementById('entry-list-'+ev)||document.getElementById('panel-'+ev);var block=document.createElement('div');block.className='entry-block';block.dataset.ev=ev;block.innerHTML=buildEntryHTML(ev,null);listEl.appendChild(block);bindAgeEvents(block,ev);updateEntryLabels(ev);}function removeEntry(btn){var block=btn.closest('.entry-block');var ev=block.dataset.ev;var listEl=document.getElementById('entry-list-'+ev)||document.getElementById('panel-'+ev);if(listEl.querySelectorAll('.entry-block').length<=1)return;block.remove();updateEntryLabels(ev);}function updateEntryLabels(ev){var listEl=document.getElementById('entry-list-'+ev)||document.getElementById('panel-'+ev);if(!listEl)return;var blocks=listEl.querySelectorAll('.entry-block');var lmap={singles:'シングルス',doubles:'ダブルス','doubles-open':'ダブルス',mixed:'ペア',team:'チーム'};blocks.forEach(function(b,i){var lbl=b.querySelector('.entry-label');if(lbl)lbl.textContent=(lmap[ev]||'エントリー')+' '+(i+1);var rmBtn=b.querySelector('.entry-remove-btn');if(rmBtn)rmBtn.style.display=blocks.length>1?'flex':'none';});}
+
+function initPlayerList(){var l=document.getElementById('player-list');if(l){l.innerHTML='';addPlayer();}}
+
+function renderTop(){var cb=document.getElementById('closed-banner');var fb=document.getElementById('start-form-btn');if(cb)cb.style.display=status.open?'none':'block';if(fb)fb.style.display=status.open?'block':'none';}
+
+function startForm(){if(!status.open)return;editingId=null;['rep-name','rep-club','rep-email','rep-tel','rep-addr'].forEach(function(id){sv(id,'');});var eb=document.getElementById('edit-banner');if(eb)eb.style.display='none';var fsb=document.getElementById('final-submit-btn');if(fsb)fsb.textContent='この内容で申し込む ✓';currentEvent=EVENTS[0];
+
+
+(function(){var l=document.getElementById('entry-list-mixed');if(!l)return;l.innerHTML='';var b=document.createElement('div');b.className='entry-block';b.dataset.ev='mixed';b.innerHTML=buildEntryHTML('mixed',null);l.appendChild(b);bindAgeEvents(b,'mixed');updateEntryLabels('mixed');})();
+updateAddEntryBtn(currentEvent);showPage('page-form');}
+
+function initFormForEdit(app){currentEvent=app.eventKey||EVENTS[0];
+
+if(app.eventKey==='mixed'){var l=document.getElementById('entry-list-mixed');if(l){l.innerHTML='';var entries=app.entries||[null];entries.forEach(function(eData){var b=document.createElement('div');b.className='entry-block';b.dataset.ev='mixed';b.innerHTML=buildEntryHTML('mixed',eData);l.appendChild(b);bindAgeEvents(b,'mixed');});updateEntryLabels('mixed');}}
+updateAddEntryBtn(currentEvent);}
+
+function goConfirm(){
+var activeEv='mixed';
+var panel=document.getElementById('panel-mixed');
+var html='<div class="section-card"><div class="section-title">申込代表者</div><table class="confirm-table">'+crow('大会名',TOURNAMENT_NAME)+crow('種目',EVENT_LABELS[activeEv]||'')+crow('代表者氏名',v('rep-name'))+crow('所属クラブ・チーム',v('rep-club'))+crow('メールアドレス',v('rep-email'))+crow('電話番号',v('rep-tel'))+crow('住所',v('rep-addr'))+'</table></div>';
+if(activeEv==='elementary'){var players=panel.querySelectorAll('.player-block');var ph='';players.forEach(function(b,i){var ae=b.querySelector('.p-age');ph+='<div class="player-confirm-block"><div class="player-confirm-label">選手 '+(i+1)+'</div><table class="confirm-table">'+crow('氏名',(b.querySelector('.p-sei').value+' '+b.querySelector('.p-mei').value).trim())+crow('ふりがな',(b.querySelector('.p-fsei').value+' '+b.querySelector('.p-fmei').value).trim())+crow('生年月日',b.querySelector('.p-dob').value)+crow('年齢',ae?ae.textContent:'')+crow('学年',b.querySelector('select[id^="grade"]').value)+crow('性別',b.querySelector('.p-gender').value)+crow('所属クラブ・チーム',b.querySelector('.p-club').value)+'</table></div>';});html+='<div class="section-card"><div class="section-title">参加選手一覧 <span class="count-badge">'+players.length+'名</span></div>'+ph+'</div>';}else{var listEl2=panel.querySelector('#entry-list-'+activeEv)||panel;var blocks=listEl2.querySelectorAll('.entry-block');html+='<div class="section-card"><div class="section-title">エントリー一覧 <span class="count-badge">'+blocks.length+(activeEv==='team'?'チーム':'件')+'</span></div>';blocks.forEach(function(b,i){html+=buildEntryConfirmHTML(b,activeEv,i+1);});html+='</div>';}
+document.getElementById('confirm-content').innerHTML=html;showPage('page-confirm');}
+
+async function doSubmit(){
+var activeEv='mixed';
+var panel=document.getElementById('panel-'+activeEv);var appId=editingId||generateId();
+var appData={id:appId,tournamentKey:TOURNAMENT_KEY,tournamentName:TOURNAMENT_NAME,eventKey:activeEv,eventLabel:EVENT_LABELS[activeEv]||'',repName:v('rep-name'),repClub:v('rep-club'),repEmail:v('rep-email'),repTel:v('rep-tel'),repAddr:v('rep-addr')};
+if(activeEv==='elementary'){appData.players=Array.from(panel.querySelectorAll('.player-block')).map(function(b){var ae=b.querySelector('.p-age');return{sei:b.querySelector('.p-sei').value,mei:b.querySelector('.p-mei').value,fsei:b.querySelector('.p-fsei').value,fmei:b.querySelector('.p-fmei').value,dob:b.querySelector('.p-dob').value,age:ae?ae.textContent:'',grade:b.querySelector('select[id^="grade"]').value,gender:b.querySelector('.p-gender').value,club:b.querySelector('.p-club').value};});appData.entries=appData.players;}else{var listEl=panel.querySelector('#entry-list-'+activeEv)||panel;appData.entries=Array.from(listEl.querySelectorAll('.entry-block')).map(function(b){return collectEntry(b,activeEv);});}
+var btn=document.getElementById('final-submit-btn');if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span>送信中...';}
+try{var action=editingId?'update':'submit';var res=await gasPost(Object.assign({action:action},appData));if(!res.ok)throw new Error('サーバーエラー');var isEdit=!!editingId;document.getElementById('complete-title').textContent=isEdit?'変更を保存しました':'申し込みを受け付けました';document.getElementById('complete-msg').textContent=isEdit?'申込内容を更新しました。':'申込内容をスプレッドシートに保存しました。';document.getElementById('complete-id').textContent='申込代表者：'+v('rep-name');document.getElementById('complete-overlay').style.display='flex';}catch(e){alert('送信に失敗しました。\n'+e.message);}finally{if(btn){btn.disabled=false;btn.textContent=editingId?'変更を保存する ✓':'この内容で申し込む ✓';}}}
+
+function toggleStatus(){status.open=document.getElementById('status-toggle').checked;var lbl=document.getElementById('status-label');lbl.textContent=status.open?'受付中':'停止中';lbl.className='toggle-label '+(status.open?'open':'closed');renderTop();}
+
+window.addEventListener('DOMContentLoaded',function(){renderTop();});
+
+</script>
+</body>
+</html>
