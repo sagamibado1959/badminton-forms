@@ -281,12 +281,12 @@ async function doCancel(){
 
 // ── 申込変更検索 ──
 async function doSearch(){
-  var q=(document.getElementById('search-input').value||'').trim();
+  var qid=(document.getElementById('search-id-input')?document.getElementById('search-id-input').value||'':'').trim();
   var results=document.getElementById('search-results');
-  if(!q){results.innerHTML='<div class="search-empty">代表者名を入力して検索してください</div>';return;}
+  if(!qid){results.innerHTML='<div class="search-empty">申込IDを入力してください</div>';return;}
   results.innerHTML='<p style="color:#6e6e73;font-size:13px;padding:8px 0">検索中...</p>';
   try{
-    var data=await gasPost({action:'search',query:q,tournamentName:TOURNAMENT_NAME});
+    var data=await gasPost({action:'search',query:'',queryId:qid,tournamentName:TOURNAMENT_NAME});
     if(!data.ok||data.results.length===0){results.innerHTML='<div class="search-empty">「'+q+'」に一致する申込が見つかりませんでした</div>';return;}
     results.innerHTML='';
     data.results.forEach(function(app){
