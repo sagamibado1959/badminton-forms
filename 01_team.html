@@ -130,8 +130,8 @@ input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,22
 
   <div class="page" id="page-search">
     <button class="back-top-btn" onclick="showPage('page-top')">← トップに戻る</button>
-    <div class="page-title"><h2>🔍 申込変更・キャンセル</h2><p>申込代表者名で検索してください</p></div>
-    <div class="section-card"><div class="field-group full" style="margin-bottom:0"><div class="field"><label>申込代表者名（一部でも可）</label><div style="display:flex;gap:8px"><input id="search-input" type="text" placeholder="例：山田" onkeydown="if(event.key==='Enter')doSearch()"><button onclick="doSearch()" style="padding:0 16px;background:#0071e3;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;white-space:nowrap">検索</button></div></div></div></div>
+    <div class="page-title"><h2>🔍 申込変更・キャンセル</h2><p>申込IDを入力してください</p></div>
+    <div class="section-card"><div class="field-group full" style="margin-bottom:12px"><div class="field"><label>申込ID</label><input id="search-id-input" type="text" placeholder="例：A1B2C3D4" onkeydown="if(event.key==='Enter')doSearch()"></div></div><button onclick="doSearch()" style="width:100%;padding:10px;background:#0071e3;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer">検索</button><p style="font-size:12px;color:#6e6e73;margin-top:10px;line-height:1.6">申込IDが不明な場合は<a href="mailto:sagami.bado1959@gmail.com" style="color:#0071e3">sagami.bado1959@gmail.com</a>までお問い合わせください。</p></div>
     <div id="search-results"></div>
   </div>
 
