@@ -305,7 +305,9 @@ async function loadEditForm(app){
   editingId=app.id;
   sv('rep-name',app.repName);sv('rep-club',app.repClub);sv('rep-email',app.repEmail);sv('rep-tel',app.repTel);sv('rep-addr',app.repAddr);
   var eb=document.getElementById('edit-banner');
-  if(eb){eb.style.display='block';document.getElementById('edit-banner-text').textContent='変更モード：'+app.repName+' さんの申込を編集中';}
+  var countLabel=app.entryCount>0?'　エントリー数：'+app.entryCount+'組/件':'';
+  var classLabel=(app.classes&&app.classes.length>0)?'　階級：'+app.classes.join('・'):'';
+  if(eb){eb.style.display='block';document.getElementById('edit-banner-text').textContent='変更モード：'+app.repName+' さんの申込を編集中'+countLabel+classLabel;}
   var cb=document.getElementById('cancel-btn-row');if(cb)cb.style.display='block';
   var fsb=document.getElementById('final-submit-btn');if(fsb)fsb.textContent='変更を保存する ✓';
   initFormForEdit(app);showPage('page-form');
@@ -526,7 +528,10 @@ function goConfirm(){
 var activeEv='mixed';
 var panel=document.getElementById('panel-mixed');
 var html='<div class="section-card"><div class="section-title">申込代表者</div><table class="confirm-table">'+crow('大会名',TOURNAMENT_NAME)+crow('種目',EVENT_LABELS[activeEv]||'')+crow('代表者氏名',v('rep-name'))+crow('所属クラブ・チーム',v('rep-club'))+crow('メールアドレス',v('rep-email'))+crow('電話番号',v('rep-tel'))+crow('住所',v('rep-addr'))+'</table></div>';
-if(activeEv==='elementary'){var players=panel.querySelectorAll('.player-block');var ph='';players.forEach(function(b,i){var ae=b.querySelector('.p-age');ph+='<div class="player-confirm-block"><div class="player-confirm-label">選手 '+(i+1)+'</div><table class="confirm-table">'+crow('氏名',(b.querySelector('.p-sei').value+' '+b.querySelector('.p-mei').value).trim())+crow('ふりがな',(b.querySelector('.p-fsei').value+' '+b.querySelector('.p-fmei').value).trim())+crow('生年月日',b.querySelector('.p-dob').value)+crow('年齢',ae?ae.textContent:'')+crow('学年',b.querySelector('select[id^="grade"]').value)+crow('性別',b.querySelector('.p-gender').value)+crow('所属クラブ・チーム',b.querySelector('.p-club').value)+'</table></div>';});html+='<div class="section-card"><div class="section-title">参加選手一覧 <span class="count-badge">'+players.length+'名</span></div>'+ph+'</div>';}else{var listEl2=panel.querySelector('#entry-list-'+activeEv)||panel;var blocks=listEl2.querySelectorAll('.entry-block');html+='<div class="section-card"><div class="section-title">エントリー一覧 <span class="count-badge">'+blocks.length+(activeEv==='team'?'チーム':'件')+'</span></div>';blocks.forEach(function(b,i){html+=buildEntryConfirmHTML(b,activeEv,i+1);});html+='</div>';}
+if(activeEv==='elementary'){var players=panel.querySelectorAll('.player-block');var ph='';players.forEach(function(b,i){var ae=b.querySelector('.p-age');ph+='<div class="player-confirm-block"><div class="player-confirm-label">選手 '+(i+1)+'</div><table class="confirm-table">'+crow('氏名',(b.querySelector('.p-sei').value+' '+b.querySelector('.p-mei').value).trim())+crow('ふりがな',(b.querySelector('.p-fsei').value+' '+b.querySelector('.p-fmei').value).trim())+crow('生年月日',b.querySelector('.p-dob').value)+crow('年齢',ae?ae.textContent:'')+crow('学年',b.querySelector('select[id^="grade"]').value)+crow('性別',b.querySelector('.p-gender').value)+crow('所属クラブ・チーム',b.querySelector('.p-club').value)+'</table></div>';});html+='<div class="section-card"><div class="section-title">参加選手一覧 <span class="count-badge">'+players.length+'名</span></div>'+ph+'</div>';}else{var listEl2=panel.querySelector('#entry-list-'+activeEv)||panel;var blocks=listEl2.querySelectorAll('.entry-block');var entryLabel=activeEv==='team'?'チーム':'件';
+html+='<div class="section-card"><div class="section-title">エントリー一覧 <span class="count-badge">'+blocks.length+entryLabel+'</span></div>';
+if(blocks.length>0){blocks.forEach(function(b,i){html+=buildEntryConfirmHTML(b,activeEv,i+1);});}else{html+='<p style="font-size:13px;color:#6e6e73;padding:8px 0">エントリー情報は変更できません。<br>内容を変更する場合は <a href="mailto:sagami.bado1959@gmail.com" style="color:#0071e3">sagami.bado1959@gmail.com</a> にお問い合わせください。</p>';}
+html+='</div>';}
 document.getElementById('confirm-content').innerHTML=html;showPage('page-confirm');}
 
 async function doSubmit(){
