@@ -307,10 +307,12 @@ async function doSearch(){
 async function loadEditForm(app){
   editingId=app.id;
   sv('rep-name',app.repName);sv('rep-club',app.repClub);sv('rep-email',app.repEmail);sv('rep-tel',app.repTel);sv('rep-addr',app.repAddr);
+  // エントリーデータをappに統合
+  if(app.eventKey)app.eventKey=app.eventKey;
   var eb=document.getElementById('edit-banner');
-  var countLabel=app.entryCount>0?'　エントリー数：'+app.entryCount+'組/件':'';
-  var classLabel=(app.classes&&app.classes.length>0)?'　階級：'+app.classes.join('・'):'';
-  if(eb){eb.style.display='block';document.getElementById('edit-banner-text').textContent='変更モード：'+app.repName+' さんの申込を編集中'+countLabel+classLabel;}
+  var entryCount=app.entries?app.entries.length:0;
+  var countLabel=entryCount>0?'　エントリー数：'+entryCount+'件':'';
+  if(eb){eb.style.display='block';document.getElementById('edit-banner-text').textContent='変更モード：'+app.repName+' さんの申込を編集中'+countLabel;}
   var cb=document.getElementById('cancel-btn-row');if(cb)cb.style.display='block';
   var fsb=document.getElementById('final-submit-btn');if(fsb)fsb.textContent='変更を保存する ✓';
   initFormForEdit(app);showPage('page-form');
