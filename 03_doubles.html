@@ -44,6 +44,8 @@ input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,22
 .back-btn{padding:13px 18px;background:transparent;border:0.5px solid #d2d2d7;border-radius:10px;font-size:14px;cursor:pointer;color:#6e6e73}
 .submit-btn{flex:1;padding:13px;background:#34c759;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer}
 .submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.cancel-apply-btn{width:100%;padding:13px;background:transparent;border:0.5px solid #d70015;border-radius:10px;font-size:14px;cursor:pointer;color:#d70015;font-weight:600;margin-bottom:8px}
+.cancel-apply-btn:hover{background:#fff0f0}
 .notice{font-size:13px;color:#6e6e73;background:#f5f5f7;border-radius:8px;padding:8px 12px;margin-bottom:12px;line-height:1.6}
 .entry-block{border:0.5px solid #d2d2d7;border-radius:12px;padding:1.25rem;margin-bottom:1rem;background:#fff}
 .entry-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
@@ -83,7 +85,6 @@ input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,22
 .login-wrap .field{margin-bottom:12px;text-align:left}
 .login-btn{width:100%;padding:11px;background:#0071e3;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px}
 .login-err{font-size:13px;color:#d70015;margin-top:8px;display:none}
-/* 管理者専用スタイル */
 .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:10px}
 .admin-header h2{font-size:20px;font-weight:600}
 .admin-tabs{display:flex;gap:6px;margin-bottom:1.25rem}
@@ -102,19 +103,13 @@ input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,22
 .toggle-label{font-size:13px;font-weight:600;min-width:44px}
 .toggle-label.open{color:#1a7a3a}
 .toggle-label.closed{color:#d70015}
-/* 申込一覧 */
 .app-card{background:#fff;border:0.5px solid #d2d2d7;border-radius:12px;padding:1rem 1.25rem;margin-bottom:10px}
 .app-card-header{display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:6px}
 .app-card-name{font-size:15px;font-weight:600}
 .app-card-meta{font-size:13px;color:#6e6e73}
 .app-card-actions{display:flex;gap:6px;margin-top:10px}
 .app-edit-btn{padding:6px 14px;background:#e8f0fd;color:#0051a2;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500}
-.app-edit-btn:hover{background:#bdd0f5}
 .app-del-btn{padding:6px 14px;background:#fff0f0;color:#d70015;border:0.5px solid #ffb3b3;border-radius:8px;font-size:13px;cursor:pointer;font-weight:500}
-.app-del-btn:hover{background:#ffe0e0}
-.app-detail{font-size:12px;color:#6e6e73;margin-top:4px;line-height:1.6;display:none}
-.app-detail.open{display:block}
-.app-toggle-detail{font-size:12px;color:#0071e3;cursor:pointer;background:none;border:none;margin-top:4px}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .key-hint{position:fixed;bottom:1rem;right:1rem;font-size:11px;color:#d2d2d7;user-select:none;pointer-events:none}
@@ -123,7 +118,7 @@ input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,22
 </head>
 <body>
 
-<header class="site-header"><div class="site-header-inner"><h1>🏸 第48回相模原バドミントンオープンダブルス大会</h1><button class="add-btn" style="padding:5px 10px;font-size:12px" onclick="showPage('page-search')">🔍 申込変更</button></div></header>
+<header class="site-header"><div class="site-header-inner"><h1>🏸 第48回相模原バドミントンオープンダブルス大会</h1><button class="add-btn" style="padding:5px 10px;font-size:12px" onclick="showPage('page-search')">🔍 申込変更・キャンセル</button></div></header>
 
 <div class="wrap">
 
@@ -135,7 +130,7 @@ input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,22
 
   <div class="page" id="page-search">
     <button class="back-top-btn" onclick="showPage('page-top')">← トップに戻る</button>
-    <div class="page-title"><h2>🔍 申込内容の変更</h2><p>申込代表者名で検索してください</p></div>
+    <div class="page-title"><h2>🔍 申込変更・キャンセル</h2><p>申込代表者名で検索してください</p></div>
     <div class="section-card"><div class="field-group full" style="margin-bottom:0"><div class="field"><label>申込代表者名（一部でも可）</label><div style="display:flex;gap:8px"><input id="search-input" type="text" placeholder="例：山田" onkeydown="if(event.key==='Enter')doSearch()"><button onclick="doSearch()" style="padding:0 16px;background:#0071e3;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;white-space:nowrap">検索</button></div></div></div></div>
     <div id="search-results"></div>
   </div>
@@ -154,6 +149,9 @@ input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,22
       <button class="add-entry-btn" id="add-entry-btn" onclick="addEntry()" style="display:none">＋ <span id="add-entry-label">エントリーを追加</span></button>
       <button class="go-confirm-btn" onclick="goConfirm()">入力内容を確認する →</button>
     </div>
+    <div id="cancel-btn-row" style="display:none;margin-top:10px">
+      <button id="cancel-apply-btn" class="cancel-apply-btn" onclick="doCancel()">🚫 この申込をキャンセルする</button>
+    </div>
   </div>
 
   <div class="page" id="page-confirm">
@@ -163,7 +161,6 @@ input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,22
     <div class="btn-row"><button class="back-btn" onclick="goBack()">← 戻る</button><button class="submit-btn" id="final-submit-btn" onclick="doSubmit()">この内容で申し込む ✓</button></div>
   </div>
 
-  <!-- 管理者ログイン（キーシーケンスでのみアクセス可） -->
   <div class="page" id="page-admin-login">
     <button class="back-top-btn" onclick="showPage('page-top')">← 戻る</button>
     <div class="login-wrap"><h2>🔐 管理者ログイン</h2>
@@ -173,32 +170,20 @@ input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,22
     </div>
   </div>
 
-  <!-- 管理者パネル -->
   <div class="page" id="page-admin">
-    <div class="admin-header">
-      <div><h2>🛠 管理者パネル</h2><p style="font-size:13px;color:#6e6e73;margin-top:2px">第48回相模原バドミントンオープンダブルス大会</p></div>
-      <button class="back-top-btn" style="margin-bottom:0" onclick="showPage('page-top')">← 申込フォームへ</button>
-    </div>
+    <div class="admin-header"><div><h2>🛠 管理者パネル</h2><p style="font-size:13px;color:#6e6e73;margin-top:2px">第48回相模原バドミントンオープンダブルス大会</p></div>
+      <button class="back-top-btn" style="margin-bottom:0" onclick="showPage('page-top')">← 申込フォームへ</button></div>
     <div class="admin-tabs">
       <button class="admin-tab active" id="tab-status-btn" onclick="switchAdminTab('tab-status')">受付管理</button>
       <button class="admin-tab" id="tab-list-btn" onclick="switchAdminTab('tab-list')">申込一覧</button>
     </div>
-
-    <!-- 受付管理タブ -->
     <div class="admin-tab-panel active" id="tab-status-panel">
-      <div class="section-card">
-        <div class="section-title">申込受付の切り替え</div>
-        <div class="toggle-row">
-          <div><p style="font-size:14px;font-weight:600">第48回相模原バドミントンオープンダブルス大会</p><p style="font-size:12px;color:#6e6e73;margin-top:2px">一般ダブルス</p></div>
-          <div class="toggle-wrap">
-            <span class="toggle-label open" id="status-label">受付中</span>
+      <div class="section-card"><div class="section-title">申込受付の切り替え</div>
+        <div class="toggle-row"><div><p style="font-size:14px;font-weight:600">第48回相模原バドミントンオープンダブルス大会</p><p style="font-size:12px;color:#6e6e73;margin-top:2px">一般ダブルス</p></div>
+          <div class="toggle-wrap"><span class="toggle-label open" id="status-label">受付中</span>
             <label class="toggle"><input type="checkbox" id="status-toggle" checked onchange="toggleStatus()"><span class="toggle-slider"></span></label>
-          </div>
-        </div>
-      </div>
+          </div></div></div>
     </div>
-
-    <!-- 申込一覧タブ -->
     <div class="admin-tab-panel" id="tab-list-panel">
       <div id="admin-list-container"><p style="color:#6e6e73;font-size:13px">「申込一覧」タブを開くと読み込みます</p></div>
     </div>
@@ -216,7 +201,7 @@ input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,22
   </div>
 </div>
 
-<div class="key-hint">↑↓↑↓</div>
+<div class="key-hint">↑←↓→</div>
 
 <script>
 
@@ -261,14 +246,40 @@ function generateId(){return 'A'+Date.now().toString(36).toUpperCase();}
 
 function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
 function goBack(){showPage('page-form');}
-function goTop(){editingId=null;['rep-name','rep-club','rep-email','rep-tel','rep-addr'].forEach(function(id){sv(id,'');});var eb=document.getElementById('edit-banner');if(eb)eb.style.display='none';var fsb=document.getElementById('final-submit-btn');if(fsb)fsb.textContent='この内容で申し込む ✓';showPage('page-top');}
+function goTop(){
+  editingId=null;
+  ['rep-name','rep-club','rep-email','rep-tel','rep-addr'].forEach(function(id){sv(id,'');});
+  var eb=document.getElementById('edit-banner');if(eb)eb.style.display='none';
+  var cb=document.getElementById('cancel-btn-row');if(cb)cb.style.display='none';
+  var fsb=document.getElementById('final-submit-btn');if(fsb)fsb.textContent='この内容で申し込む ✓';
+  showPage('page-top');
+}
 
 async function gasPost(payload){
   var res=await fetch(GAS_URL,{method:'POST',body:JSON.stringify(payload)});
   return await res.json();
 }
 
-// ── 申込者用：変更検索 ──
+// ── 申込キャンセル ──
+async function doCancel(){
+  if(!editingId){alert('変更モードでのみキャンセルできます');return;}
+  if(!confirm('この申込をキャンセルします。\nスプレッドシートの大会名が「キャンセル」に書き換えられます。\nよろしいですか？'))return;
+  var btn=document.getElementById('cancel-apply-btn');
+  if(btn){btn.disabled=true;btn.textContent='処理中...';}
+  try{
+    var res=await gasPost({action:'cancel',id:editingId,tournamentName:TOURNAMENT_NAME});
+    if(!res.ok)throw new Error('サーバーエラー');
+    document.getElementById('complete-title').textContent='申込をキャンセルしました';
+    document.getElementById('complete-msg').textContent='申込をキャンセルしました。スプレッドシートに記録されています。';
+    document.getElementById('complete-id').textContent='';
+    document.getElementById('complete-overlay').style.display='flex';
+  }catch(e){
+    alert('キャンセルに失敗しました。\n'+e.message);
+    if(btn){btn.disabled=false;btn.textContent='🚫 この申込をキャンセルする';}
+  }
+}
+
+// ── 申込変更検索 ──
 async function doSearch(){
   var q=(document.getElementById('search-input').value||'').trim();
   var results=document.getElementById('search-results');
@@ -293,7 +304,9 @@ async function doSearch(){
 async function loadEditForm(app){
   editingId=app.id;
   sv('rep-name',app.repName);sv('rep-club',app.repClub);sv('rep-email',app.repEmail);sv('rep-tel',app.repTel);sv('rep-addr',app.repAddr);
-  var eb=document.getElementById('edit-banner');if(eb){eb.style.display='block';document.getElementById('edit-banner-text').textContent='変更モード：申込ID '+app.id+' を編集中';}
+  var eb=document.getElementById('edit-banner');
+  if(eb){eb.style.display='block';document.getElementById('edit-banner-text').textContent='変更モード：'+app.repName+' さんの申込を編集中';}
+  var cb=document.getElementById('cancel-btn-row');if(cb)cb.style.display='block';
   var fsb=document.getElementById('final-submit-btn');if(fsb)fsb.textContent='変更を保存する ✓';
   initFormForEdit(app);showPage('page-form');
 }
@@ -427,32 +440,19 @@ function buildEntryConfirmHTML(block,ev,idx){
 
 // ── 管理者機能 ──
 const ADMIN_SEQ=['ArrowUp','ArrowLeft','ArrowDown','ArrowRight'];
-let keyBuf=[];
+var keyBuf=[];
 document.addEventListener('keydown',function(e){
   keyBuf.push(e.key);
   if(keyBuf.length>ADMIN_SEQ.length)keyBuf.shift();
-  if(keyBuf.join(',')===ADMIN_SEQ.join(',')){
-    keyBuf=[];
-    showPage('page-admin-login');
-  }
+  if(keyBuf.join(',')===ADMIN_SEQ.join(',')){keyBuf=[];showPage('page-admin-login');}
 });
 
 function adminLogin(){
   var pw=document.getElementById('admin-pw').value;
-  if(pw===ADMIN_PASSWORD){
-    document.getElementById('login-err').style.display='none';
-    document.getElementById('admin-pw').value='';
-    showAdminPanel();
-  }else{
-    document.getElementById('login-err').style.display='block';
-  }
+  if(pw===ADMIN_PASSWORD){document.getElementById('login-err').style.display='none';document.getElementById('admin-pw').value='';showAdminPanel();}
+  else document.getElementById('login-err').style.display='block';
 }
-
-function showAdminPanel(){
-  showPage('page-admin');
-  switchAdminTab('tab-status');
-}
-
+function showAdminPanel(){showPage('page-admin');switchAdminTab('tab-status');}
 function switchAdminTab(tab){
   document.querySelectorAll('.admin-tab').forEach(function(b){b.classList.remove('active');});
   document.querySelectorAll('.admin-tab-panel').forEach(function(p){p.classList.remove('active');});
@@ -460,7 +460,6 @@ function switchAdminTab(tab){
   document.getElementById(tab+'-panel').classList.add('active');
   if(tab==='tab-list')loadAdminList();
 }
-
 async function loadAdminList(){
   var container=document.getElementById('admin-list-container');
   container.innerHTML='<p style="color:#6e6e73;font-size:13px;padding:8px 0">読み込み中...</p>';
@@ -470,21 +469,7 @@ async function loadAdminList(){
     container.innerHTML='<p style="font-size:13px;color:#6e6e73;margin-bottom:1rem">申込件数：<strong style="color:#1d1d1f">'+data.results.length+'件</strong></p>';
     data.results.sort(function(a,b){return b.date>a.date?1:-1;}).forEach(function(app){
       var card=document.createElement('div');card.className='app-card';
-      var entries='';
-      try{
-        var ents=typeof app.entries==='string'?JSON.parse(app.entries):app.entries;
-        if(Array.isArray(ents)&&ents.length>0){
-          var e0=ents[0];
-          if(e0.sei)entries='代表選手：'+e0.sei+' '+e0.mei;
-          else if(e0.d1sei)entries='選手1：'+e0.d1sei+' '+e0.d1mei;
-          else if(e0.tname)entries='チーム：'+e0.tname;
-        }
-      }catch(e){}
-      card.innerHTML='<div class="app-card-header">'
-        +'<div><div class="app-card-name">'+app.repName+'</div>'
-        +'<div class="app-card-meta">'+app.eventLabel+'　'+app.date+'</div>'
-        +(entries?'<div class="app-card-meta">'+entries+'</div>':'')+'</div>'
-        +'<span class="id-badge">'+app.id+'</span></div>'
+      card.innerHTML='<div class="app-card-header"><div><div class="app-card-name">'+app.repName+'</div><div class="app-card-meta">'+app.eventLabel+'　'+app.date+'</div></div><span class="id-badge">'+app.id+'</span></div>'
         +'<div class="app-card-actions">'
         +'<button class="app-edit-btn" onclick="adminEditApp('+JSON.stringify(JSON.stringify(app))+')">✏️ 編集</button>'
         +'<button class="app-del-btn" onclick="adminDeleteApp(\''+app.id+'\',this)">🗑 削除</button>'
@@ -493,13 +478,7 @@ async function loadAdminList(){
     });
   }catch(e){container.innerHTML='<div class="search-empty" style="color:#d70015">通信エラー</div>';}
 }
-
-function adminEditApp(appJson){
-  var app=JSON.parse(appJson);
-  showPage('page-form');
-  loadEditForm(app);
-}
-
+function adminEditApp(appJson){var app=JSON.parse(appJson);loadEditForm(app);}
 async function adminDeleteApp(id,btn){
   if(!confirm('申込ID「'+id+'」を削除しますか？\nこの操作は取り消せません。'))return;
   btn.disabled=true;btn.textContent='削除中...';
@@ -508,6 +487,13 @@ async function adminDeleteApp(id,btn){
     if(res.ok){btn.closest('.app-card').style.opacity='.4';btn.textContent='削除済み';}
     else{alert('削除に失敗しました');btn.disabled=false;btn.textContent='🗑 削除';}
   }catch(e){alert('通信エラー');btn.disabled=false;btn.textContent='🗑 削除';}
+}
+function toggleStatus(){
+  status.open=document.getElementById('status-toggle').checked;
+  var lbl=document.getElementById('status-label');
+  lbl.textContent=status.open?'受付中':'停止中';
+  lbl.className='toggle-label '+(status.open?'open':'closed');
+  renderTop();
 }
 
 const GAS_URL='https://script.google.com/macros/s/AKfycbwAJwlm94Ug6v2UREWFnJUGbFDT7pC7JQbUOuJ8_5T_-2uhOjrTMnBRabXP1Vz6jDnJ1w/exec';
@@ -525,7 +511,7 @@ function initPlayerList(){var l=document.getElementById('player-list');if(l){l.i
 
 function renderTop(){var cb=document.getElementById('closed-banner');var fb=document.getElementById('start-form-btn');if(cb)cb.style.display=status.open?'none':'block';if(fb)fb.style.display=status.open?'block':'none';}
 
-function startForm(){if(!status.open)return;editingId=null;['rep-name','rep-club','rep-email','rep-tel','rep-addr'].forEach(function(id){sv(id,'');});var eb=document.getElementById('edit-banner');if(eb)eb.style.display='none';var fsb=document.getElementById('final-submit-btn');if(fsb)fsb.textContent='この内容で申し込む ✓';currentEvent=EVENTS[0];
+function startForm(){if(!status.open)return;editingId=null;['rep-name','rep-club','rep-email','rep-tel','rep-addr'].forEach(function(id){sv(id,'');});var eb=document.getElementById('edit-banner');if(eb)eb.style.display='none';var cb=document.getElementById('cancel-btn-row');if(cb)cb.style.display='none';var fsb=document.getElementById('final-submit-btn');if(fsb)fsb.textContent='この内容で申し込む ✓';currentEvent=EVENTS[0];
 
 
 (function(){var l=document.getElementById('entry-list-doubles-open');if(!l)return;l.innerHTML='';var b=document.createElement('div');b.className='entry-block';b.dataset.ev='doubles-open';b.innerHTML=buildEntryHTML('doubles-open',null);l.appendChild(b);bindAgeEvents(b,'doubles-open');updateEntryLabels('doubles-open');})();
@@ -550,8 +536,6 @@ var appData={id:appId,tournamentKey:TOURNAMENT_KEY,tournamentName:TOURNAMENT_NAM
 if(activeEv==='elementary'){appData.players=Array.from(panel.querySelectorAll('.player-block')).map(function(b){var ae=b.querySelector('.p-age');return{sei:b.querySelector('.p-sei').value,mei:b.querySelector('.p-mei').value,fsei:b.querySelector('.p-fsei').value,fmei:b.querySelector('.p-fmei').value,dob:b.querySelector('.p-dob').value,age:ae?ae.textContent:'',grade:b.querySelector('select[id^="grade"]').value,gender:b.querySelector('.p-gender').value,club:b.querySelector('.p-club').value};});appData.entries=appData.players;}else{var listEl=panel.querySelector('#entry-list-'+activeEv)||panel;appData.entries=Array.from(listEl.querySelectorAll('.entry-block')).map(function(b){return collectEntry(b,activeEv);});}
 var btn=document.getElementById('final-submit-btn');if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span>送信中...';}
 try{var action=editingId?'update':'submit';var res=await gasPost(Object.assign({action:action},appData));if(!res.ok)throw new Error('サーバーエラー');var isEdit=!!editingId;document.getElementById('complete-title').textContent=isEdit?'変更を保存しました':'申し込みを受け付けました';document.getElementById('complete-msg').textContent=isEdit?'申込内容を更新しました。':'申込内容をスプレッドシートに保存しました。';document.getElementById('complete-id').textContent='申込代表者：'+v('rep-name');document.getElementById('complete-overlay').style.display='flex';}catch(e){alert('送信に失敗しました。\n'+e.message);}finally{if(btn){btn.disabled=false;btn.textContent=editingId?'変更を保存する ✓':'この内容で申し込む ✓';}}}
-
-function toggleStatus(){status.open=document.getElementById('status-toggle').checked;var lbl=document.getElementById('status-label');lbl.textContent=status.open?'受付中':'停止中';lbl.className='toggle-label '+(status.open?'open':'closed');renderTop();}
 
 window.addEventListener('DOMContentLoaded',function(){renderTop();});
 
