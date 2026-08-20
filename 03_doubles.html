@@ -196,7 +196,8 @@ input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,22
     <div style="font-size:48px;margin-bottom:12px">✅</div>
     <h3 id="complete-title">申し込みを受け付けました</h3>
     <p id="complete-msg">申込内容をスプレッドシートに保存しました。</p>
-    <p id="complete-id" style="font-size:13px;color:#6e6e73;margin-top:4px"></p>
+    <p id="complete-id" style="font-size:14px;color:#1d1d1f;margin-top:8px;font-weight:600"></p>
+    <p style="font-size:13px;color:#d70015;font-weight:600;margin-top:6px;background:#fff0f0;border-radius:8px;padding:8px">⚠️ 申込IDを必ず控えてください。<br>変更・キャンセル時に必要です。</p>
     <button class="close-btn" onclick="document.getElementById('complete-overlay').style.display='none';goTop()">閉じる</button>
   </div>
 </div>
@@ -542,7 +543,7 @@ var panel=document.getElementById('panel-'+activeEv);var appId=editingId||genera
 var appData={id:appId,tournamentKey:TOURNAMENT_KEY,tournamentName:TOURNAMENT_NAME,eventKey:activeEv,eventLabel:EVENT_LABELS[activeEv]||'',repName:v('rep-name'),repClub:v('rep-club'),repEmail:v('rep-email'),repTel:v('rep-tel'),repAddr:v('rep-addr')};
 if(activeEv==='elementary'){appData.players=Array.from(panel.querySelectorAll('.player-block')).map(function(b){var ae=b.querySelector('.p-age');return{sei:b.querySelector('.p-sei').value,mei:b.querySelector('.p-mei').value,fsei:b.querySelector('.p-fsei').value,fmei:b.querySelector('.p-fmei').value,dob:b.querySelector('.p-dob').value,age:ae?ae.textContent:'',grade:b.querySelector('select[id^="grade"]').value,gender:b.querySelector('.p-gender').value,club:b.querySelector('.p-club').value};});appData.entries=appData.players;}else{var listEl=panel.querySelector('#entry-list-'+activeEv)||panel;appData.entries=Array.from(listEl.querySelectorAll('.entry-block')).map(function(b){return collectEntry(b,activeEv);});}
 var btn=document.getElementById('final-submit-btn');if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span>送信中...';}
-try{var action=editingId?'update':'submit';var res=await gasPost(Object.assign({action:action},appData));if(!res.ok)throw new Error('サーバーエラー');var isEdit=!!editingId;document.getElementById('complete-title').textContent=isEdit?'変更を保存しました':'申し込みを受け付けました';document.getElementById('complete-msg').textContent=isEdit?'申込内容を更新しました。':'申込内容をスプレッドシートに保存しました。';document.getElementById('complete-id').textContent='申込。1D：'+appId+'　代表者：'+v('rep-name');document.getElementById('complete-overlay').style.display='flex';}catch(e){alert('送信に失敗しました。\n'+e.message);}finally{if(btn){btn.disabled=false;btn.textContent=editingId?'変更を保存する ✓':'この内容で申し込む ✓';}}}
+try{var action=editingId?'update':'submit';var res=await gasPost(Object.assign({action:action},appData));if(!res.ok)throw new Error('サーバーエラー');var isEdit=!!editingId;document.getElementById('complete-title').textContent=isEdit?'変更を保存しました':'申し込みを受け付けました';document.getElementById('complete-msg').textContent=isEdit?'申込内容を更新しました。':'';document.getElementById('complete-id').textContent='申込。1D：'+appId+'　代表者：'+v('rep-name');document.getElementById('complete-overlay').style.display='flex';}catch(e){alert('送信に失敗しました。\n'+e.message);}finally{if(btn){btn.disabled=false;btn.textContent=editingId?'変更を保存する ✓':'この内容で申し込む ✓';}}}
 
 window.addEventListener('DOMContentLoaded',function(){renderTop();});
 
