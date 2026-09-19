@@ -209,6 +209,37 @@ input:focus,select:focus{border-color:#0071e3;box-shadow:0 0 0 2px rgba(0,113,22
 
 <script>
 
+
+// 電話番号自動ハイフン挿入
+function formatTel(inp){
+  inp.addEventListener('input',function(){
+    var n=this.value.replace(/[^0-9]/g,'');
+    if(n.length<=3)this.value=n;
+    else if(n.startsWith('0120')||n.startsWith('0800')){
+      // フリーダイヤル: 0120-XXX-XXX
+      if(n.length<=7)this.value=n.slice(0,4)+'-'+n.slice(4);
+      else this.value=n.slice(0,4)+'-'+n.slice(4,7)+'-'+n.slice(7,10);
+    }else if(n.startsWith('03')||n.startsWith('06')){
+      // 市外局番2桁: 03-XXXX-XXXX
+      if(n.length<=6)this.value=n.slice(0,2)+'-'+n.slice(2);
+      else this.value=n.slice(0,2)+'-'+n.slice(2,6)+'-'+n.slice(6,10);
+    }else if(n.length<=10){
+      // 市外局番3桁: 0XX-XXX-XXXX
+      if(n.length<=3)this.value=n;
+      else if(n.length<=6)this.value=n.slice(0,3)+'-'+n.slice(3);
+      else this.value=n.slice(0,3)+'-'+n.slice(3,6)+'-'+n.slice(6,10);
+    }else{
+      // 携帯: 090-XXXX-XXXX
+      if(n.length<=3)this.value=n;
+      else if(n.length<=7)this.value=n.slice(0,3)+'-'+n.slice(3);
+      else this.value=n.slice(0,3)+'-'+n.slice(3,7)+'-'+n.slice(7,11);
+    }
+  });
+}
+function bindTelInputs(){
+  document.querySelectorAll('input[type=tel]').forEach(function(inp){formatTel(inp);});
+}
+
 function calcAge(dob){
   if(!dob)return '';
   var today=new Date();
@@ -340,6 +371,7 @@ function addPlayerWithData(p){
     +'<div class="field-group three"><div class="field"><label>学年 <span class="req">*</span></label>'+gradeSelectHTML('grade_'+pid,p.grade||'')+'</div><div class="field"><label>性別 <span class="req">*</span></label><select class="p-gender"><option value="">性別</option>'+['男性','女性','回答しない'].map(function(x){return '<option'+(p.gender===x?' selected':'')+'>'+x+'</option>';}).join('')+'</select></div><div class="field"><label>所属クラブ・チーム <span class="req">*</span></label><input class="p-club" type="text" placeholder="〇〇クラブ" value="'+(p.club||'')+'"></div></div>';
   list.appendChild(block);
   updateAgeBadgeByClass(block,'p-dob','p-age');
+  bindTelInputs();
   updatePlayerUI();
 }
 function removePlayer(btn){btn.closest('.player-block').remove();document.querySelectorAll('.player-block').forEach(function(b,i){b.querySelector('.player-label').textContent='選手 '+(i+1);});updatePlayerUI();}
@@ -513,7 +545,7 @@ currentEvent='elementary';
 
 function switchTab(ev){currentEvent=ev;document.querySelectorAll('#event-tabs .tab').forEach(function(b,i){b.classList.toggle('active',EVENTS[i]===ev);});document.querySelectorAll('[id^="panel-"]').forEach(function(p){p.classList.remove('active');});document.getElementById('panel-'+ev).classList.add('active');updateAddEntryBtn(ev);}
 
-function addEntry(){var ev=currentEvent;var listEl=document.getElementById('entry-list-'+ev)||document.getElementById('panel-'+ev);var block=document.createElement('div');block.className='entry-block';block.dataset.ev=ev;block.innerHTML=buildEntryHTML(ev,null);listEl.appendChild(block);bindAgeEvents(block,ev);updateEntryLabels(ev);}function removeEntry(btn){var block=btn.closest('.entry-block');var ev=block.dataset.ev;var listEl=document.getElementById('entry-list-'+ev)||document.getElementById('panel-'+ev);if(listEl.querySelectorAll('.entry-block').length<=1)return;block.remove();updateEntryLabels(ev);}function updateEntryLabels(ev){var listEl=document.getElementById('entry-list-'+ev)||document.getElementById('panel-'+ev);if(!listEl)return;var blocks=listEl.querySelectorAll('.entry-block');var lmap={singles:'シングルス',doubles:'ダブルス','doubles-open':'ダブルス',mixed:'ペア',team:'チーム'};blocks.forEach(function(b,i){var lbl=b.querySelector('.entry-label');if(lbl)lbl.textContent=(lmap[ev]||'エントリー')+' '+(i+1);var rmBtn=b.querySelector('.entry-remove-btn');if(rmBtn)rmBtn.style.display=blocks.length>1?'flex':'none';});}
+function addEntry(){var ev=currentEvent;var listEl=document.getElementById('entry-list-'+ev)||document.getElementById('panel-'+ev);var block=document.createElement('div');block.className='entry-block';block.dataset.ev=ev;block.innerHTML=buildEntryHTML(ev,null);listEl.appendChild(block);bindAgeEvents(block,ev);bindTelInputs();updateEntryLabels(ev);}function removeEntry(btn){var block=btn.closest('.entry-block');var ev=block.dataset.ev;var listEl=document.getElementById('entry-list-'+ev)||document.getElementById('panel-'+ev);if(listEl.querySelectorAll('.entry-block').length<=1)return;block.remove();updateEntryLabels(ev);}function updateEntryLabels(ev){var listEl=document.getElementById('entry-list-'+ev)||document.getElementById('panel-'+ev);if(!listEl)return;var blocks=listEl.querySelectorAll('.entry-block');var lmap={singles:'シングルス',doubles:'ダブルス','doubles-open':'ダブルス',mixed:'ペア',team:'チーム'};blocks.forEach(function(b,i){var lbl=b.querySelector('.entry-label');if(lbl)lbl.textContent=(lmap[ev]||'エントリー')+' '+(i+1);var rmBtn=b.querySelector('.entry-remove-btn');if(rmBtn)rmBtn.style.display=blocks.length>1?'flex':'none';});}
 
 function initPlayerList(){var l=document.getElementById('player-list');if(l){l.innerHTML='';addPlayer();}}
 
@@ -523,14 +555,74 @@ function startForm(){if(!status.open)return;editingId=null;['rep-name','rep-club
 switchTab(EVENTS[0]);
 initPlayerList();
 (function(){var l=document.getElementById('entry-list-singles');if(!l)return;l.innerHTML='';var b=document.createElement('div');b.className='entry-block';b.dataset.ev='singles';b.innerHTML=buildEntryHTML('singles',null);l.appendChild(b);bindAgeEvents(b,'singles');updateEntryLabels('singles');})();(function(){var l=document.getElementById('entry-list-doubles');if(!l)return;l.innerHTML='';var b=document.createElement('div');b.className='entry-block';b.dataset.ev='doubles';b.innerHTML=buildEntryHTML('doubles',null);l.appendChild(b);bindAgeEvents(b,'doubles');updateEntryLabels('doubles');})();
-updateAddEntryBtn(currentEvent);showPage('page-form');}
+updateAddEntryBtn(currentEvent);showPage('page-form');setTimeout(bindTelInputs,100);}
 
 function initFormForEdit(app){currentEvent=app.eventKey||EVENTS[0];
 switchTab(app.eventKey||EVENTS[0]);
 if(app.players&&app.players.length>0){document.getElementById('player-list').innerHTML='';app.players.forEach(function(p){addPlayerWithData(p);});}else{initPlayerList();}if(app.eventKey==='singles'){var l=document.getElementById('entry-list-singles');if(l){l.innerHTML='';var entries=app.entries||[null];entries.forEach(function(eData){var b=document.createElement('div');b.className='entry-block';b.dataset.ev='singles';b.innerHTML=buildEntryHTML('singles',eData);l.appendChild(b);bindAgeEvents(b,'singles');});updateEntryLabels('singles');}}if(app.eventKey==='doubles'){var l=document.getElementById('entry-list-doubles');if(l){l.innerHTML='';var entries=app.entries||[null];entries.forEach(function(eData){var b=document.createElement('div');b.className='entry-block';b.dataset.ev='doubles';b.innerHTML=buildEntryHTML('doubles',eData);l.appendChild(b);bindAgeEvents(b,'doubles');});updateEntryLabels('doubles');}}
 updateAddEntryBtn(currentEvent);}
 
+function validateForm(){
+  var errors=[];
+  // 代表者情報チェック
+  var repFields=[
+    {id:'rep-name',label:'代表者氏名'},
+    {id:'rep-club',label:'所属クラブ・チーム'},
+    {id:'rep-email',label:'メールアドレス'},
+    {id:'rep-tel',label:'電話番号'},
+    {id:'rep-addr',label:'住所'}
+  ];
+  repFields.forEach(function(f){
+    var el=document.getElementById(f.id);
+    if(!el||!el.value.trim())errors.push(f.label);
+  });
+  // エントリー・選手情報チェック
+  document.querySelectorAll('input[type=text],input[type=date],input[type=email],input[type=tel]').forEach(function(inp){
+    if(inp.closest('.page-confirm')||inp.closest('#page-search')||inp.closest('#page-admin')||inp.closest('#page-admin-login'))return;
+    if(inp.id&&['rep-name','rep-club','rep-email','rep-tel','rep-addr'].indexOf(inp.id)>=0)return;
+    if(!inp.closest('.tab-panel')&&!inp.closest('.entry-block')&&!inp.closest('.player-block'))return;
+    // アクティブなパネル内のみチェック
+    var panel=inp.closest('.tab-panel');
+    if(panel&&!panel.classList.contains('active'))return;
+    if(!inp.value.trim()){
+      var lbl=inp.previousElementSibling||inp.closest('.field')&&inp.closest('.field').querySelector('label');
+      var name=lbl?lbl.textContent.replace('*','').trim():'項目';
+      inp.style.borderColor='#d70015';
+      inp.style.boxShadow='0 0 0 2px rgba(215,0,21,.15)';
+    }else{
+      inp.style.borderColor='';
+      inp.style.boxShadow='';
+    }
+  });
+  // selectチェック
+  document.querySelectorAll('select').forEach(function(sel){
+    if(sel.closest('#page-admin')||sel.closest('#page-admin-login')||sel.closest('#page-search'))return;
+    var panel=sel.closest('.tab-panel');
+    if(panel&&!panel.classList.contains('active'))return;
+    if(!sel.value){
+      sel.style.borderColor='#d70015';
+      sel.style.boxShadow='0 0 0 2px rgba(215,0,21,.15)';
+    }else{
+      sel.style.borderColor='';
+      sel.style.boxShadow='';
+    }
+  });
+  // 未入力の赤くなったフィールド数を確認
+  var redFields=document.querySelectorAll('input[style*="d70015"],select[style*="d70015"]');
+  var activeRedFields=Array.from(redFields).filter(function(el){
+    var panel=el.closest('.tab-panel');
+    return !panel||panel.classList.contains('active');
+  });
+  if(activeRedFields.length>0){
+    activeRedFields[0].scrollIntoView({behavior:'smooth',block:'center'});
+    alert('未入力の項目があります。赤く表示された項目を入力してください。');
+    return false;
+  }
+  return true;
+}
+
 function goConfirm(){
+  if(!validateForm())return;
 var activeEv=currentEvent;
 var panel=document.getElementById('panel-'+activeEv);
 var html='<div class="section-card"><div class="section-title">申込代表者</div><table class="confirm-table">'+crow('大会名',TOURNAMENT_NAME)+crow('種目',EVENT_LABELS[activeEv]||'')+crow('代表者氏名',v('rep-name'))+crow('所属クラブ・チーム',v('rep-club'))+crow('メールアドレス',v('rep-email'))+crow('電話番号',v('rep-tel'))+crow('住所',v('rep-addr'))+'</table></div>';
@@ -548,7 +640,7 @@ if(activeEv==='elementary'){appData.players=Array.from(panel.querySelectorAll('.
 var btn=document.getElementById('final-submit-btn');if(btn){btn.disabled=true;btn.innerHTML='<span class="spinner"></span>送信中...';}
 try{var action=editingId?'update':'submit';var res=await gasPost(Object.assign({action:action},appData));if(!res.ok)throw new Error('サーバーエラー');var isEdit=!!editingId;document.getElementById('complete-title').textContent=isEdit?'変更を保存しました':'申し込みを受け付けました';document.getElementById('complete-msg').textContent=isEdit?'申込内容を更新しました。':'';document.getElementById('complete-id').textContent='申込。1D：'+appId+'　代表者：'+v('rep-name');document.getElementById('complete-overlay').style.display='flex';}catch(e){alert('送信に失敗しました。\n'+e.message);}finally{if(btn){btn.disabled=false;btn.textContent=editingId?'変更を保存する ✓':'この内容で申し込む ✓';}}}
 
-window.addEventListener('DOMContentLoaded',function(){renderTop();});
+window.addEventListener('DOMContentLoaded',function(){renderTop();setTimeout(bindTelInputs,200);});
 
 </script>
 </body>
