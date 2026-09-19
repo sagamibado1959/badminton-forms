@@ -259,6 +259,20 @@ function updateAgeBadgeByClass(block,dobClass,badgeClass){
 
 
 const CLASS_OPTIONS=['A級','B級','C級','壮年40','壮年50','壮年60'];
+const MIXED_CLASS_OPTIONS=[
+  {value:'A級の部',label:'Ａ級の部　希望者及びＢ級の部の優勝者'},
+  {value:'B級の部',label:'Ｂ級の部　一人又は二人とも３０歳以下'},
+  {value:'C級の部',label:'Ｃ級の部　二人とも３１歳以上'},
+  {value:'D級の部',label:'Ｄ級の部　二人とも４１歳以上（Ｃへの出場は、不可）'},
+  {value:'E級の部',label:'Ｅ級の部　二人とも５１歳以上（Ｃ・Ｄへの出場は、不可）'},
+  {value:'F級の部',label:'Ｆ級の部　二人とも５９歳以上（Ｃ・Ｄ・Ｅへの出場は、不可）'},
+];
+function mixedClassSelectHTML(id,sel){
+  sel=sel||'';
+  return '<select id="'+id+'"><option value="">選択してください</option>'
+    +MIXED_CLASS_OPTIONS.map(function(o){return '<option value="'+o.value+'"'+(o.value===sel?' selected':'')+'>'+o.label+'</option>';}).join('')
+    +'</select>';
+}
 const OPEN_CLASS=[{label:'男子',options:['男子A級','男子B級','男子C級','男子壮年40','男子壮年50','男子壮年60']},{label:'女子',options:['女子A級','女子B級','女子C級','女子壮年40','女子壮年50','女子壮年60']}];
 const EVENT_LABELS={elementary:'小学生シングルス',singles:'一般シングルス',doubles:'一般ダブルス','doubles-open':'一般ダブルス',mixed:'混合ダブルス',team:'団体戦'};
 let currentEvent=null,editingId=null;
@@ -422,7 +436,7 @@ function buildEntryHTML(ev,data){
     +'<div class="field-group"><div class="field"><label>メールアドレス <span class="req">*</span></label><input class="e-m2-email" type="email" placeholder="example2@email.com" value="'+fi(data,'m2email')+'"></div><div class="field"><label>電話番号 <span class="req">*</span></label><input class="e-m2-tel" type="tel" placeholder="090-0000-0000" value="'+fi(data,'m2tel')+'"></div></div>'
     +'<div class="field-group full"><div class="field"><label>住所 <span class="req">*</span></label><input class="e-m2-addr" type="text" placeholder="神奈川県相模原市〇〇区…" value="'+fi(data,'m2addr')+'"></div></div>'
     +'<div class="field-group full"><div class="field"><label>所属クラブ・チーム <span class="req">*</span></label><input class="e-m2-club" type="text" placeholder="〇〇バドミントンクラブ" value="'+fi(data,'m2club')+'"></div></div>'
-    +'<div class="divider"></div><div class="field-group full"><div class="field"><label>クラス <span class="req">*</span></label>'+classSelectHTML('mc_'+uid,fsel(data,'class'))+'</div></div>';
+    +'<div class="divider"></div><div class="field-group full"><div class="field"><label>クラス <span class="req">*</span></label>'+mixedClassSelectHTML('mc_'+uid,fsel(data,'class'))+'</div></div>';
   if(ev==='team'){
     var defNm=[['山田','太郎','やまだ','たろう'],['田中','一郎','たなか','いちろう'],['佐々木','健','ささき','けん']];
     var defNf=[['鈴木','花子','すずき','はなこ'],['伊藤','由美','いとう','ゆみ'],['高橋','さくら','たかはし','さくら']];
